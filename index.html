@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>BeerQuest · Aprende estilos BJCP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#58cc02; --green-d:#48a300; --green-l:#d7ffb8;
+  --red:#ff4b4b; --red-d:#d33131; --red-l:#ffdfe0;
+  --blue:#1cb0f6; --blue-d:#0f8fc7;
+  --gold:#ffc800; --gold-d:#d9a400;
+  --purple:#ce82ff; --purple-d:#a568cc;
+  --ink:#3c3c3c; --ink-l:#777; --line:#e5e5e5; --bg:#fffdf8;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  margin:0;font-family:'Nunito',system-ui,-apple-system,sans-serif;
+  background:var(--bg);color:var(--ink);overflow-x:hidden;
+  display:flex;justify-content:center;
+}
+#app{width:100%;max-width:540px;position:relative;min-height:100vh;padding:0 16px 140px}
+
+/* ---------- SCREENS ---------- */
+.screen{display:none;animation:fadeIn .25s ease}
+.screen.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ---------- TOPBAR ---------- */
+.topbar{
+  position:sticky;top:0;z-index:50;display:flex;gap:8px;justify-content:space-between;
+  padding:14px 0 10px;background:linear-gradient(var(--bg) 70%,transparent);
+}
+.stat{
+  font-weight:900;font-size:15px;display:flex;align-items:center;gap:6px;
+  background:#fff;border:2px solid var(--line);border-bottom-width:4px;
+  border-radius:14px;padding:6px 14px;color:var(--ink);
+}
+.stat.streak{color:#ff7a00}
+.stat.xp{color:#c78a00}
+.stat.coins{color:#b8860b}
+
+/* ---------- HERO + CONSULTOR ---------- */
+.hero{
+  background:linear-gradient(140deg,#ffb703,#fb8500);
+  border-radius:24px;padding:22px 20px;color:#fff;margin-bottom:18px;
+  box-shadow:0 6px 0 #d97706;
+}
+.hero h1{margin:0 0 6px;font-size:26px;font-weight:900;letter-spacing:-.5px}
+.hero p{margin:0;font-size:14px;font-weight:700;opacity:.95;line-height:1.4}
+.hero-bar{height:12px;background:rgba(255,255,255,.35);border-radius:99px;margin-top:16px;overflow:hidden}
+.hero-bar span{display:block;height:100%;background:#fff;border-radius:99px;transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.hero-sub{margin-top:8px;font-size:12px;font-weight:800;opacity:.9}
+
+/* Consultor José Guerrero */
+.consultor-card{
+  display:flex;gap:14px;align-items:center;background:#fff;
+  border:2px solid var(--line);border-bottom-width:5px;border-radius:20px;
+  padding:14px 16px;margin-bottom:22px;
+}
+.consultor-photo{
+  width:64px;height:64px;border-radius:50%;object-fit:cover;
+  border:3px solid var(--gold);flex:none;
+}
+.consultor-info{flex:1;min-width:0}
+.consultor-name{font-weight:900;font-size:15px;margin:0}
+.consultor-role{font-size:12px;font-weight:700;color:var(--ink-l);margin:1px 0 6px}
+.consultor-tip{
+  font-size:13px;font-weight:700;color:#4a4a4a;line-height:1.35;margin:0;
+  background:#fff8e1;border-radius:10px;padding:8px 10px;
+}
+.consultor-tip::before{content:'💡 ';font-size:14px}
+
+/* ---------- UNITS ---------- */
+.unit{margin-bottom:30px}
+.unit-head{
+  display:flex;align-items:center;gap:14px;border-radius:20px;padding:16px 18px;color:#fff;
+}
+.unit-emoji{font-size:30px;line-height:1}
+.unit-title{font-weight:900;font-size:18px;letter-spacing:-.3px}
+.unit-sub{font-size:12.5px;font-weight:700;opacity:.9;margin-top:2px}
+.unit-path{display:flex;flex-direction:column;align-items:center;gap:6px;padding:22px 0 6px}
+.node-row{display:flex;flex-direction:column;align-items:center;gap:6px;transition:transform .2s}
+.node{
+  width:74px;height:74px;border-radius:50%;border:none;cursor:pointer;
+  font-size:28px;font-weight:900;color:#fff;display:flex;align-items:center;justify-content:center;
+  background:var(--c);box-shadow:0 6px 0 var(--cd);transition:transform .08s,box-shadow .08s;
+  position:relative;
+}
+.node:active:not(.locked){transform:translateY(6px);box-shadow:0 0 0 var(--cd)}
+.node.locked{background:#e5e5e5;box-shadow:0 6px 0 #cfcfcf;color:#a5a5a5;cursor:not-allowed;font-size:24px}
+.node.done{background:var(--gold);box-shadow:0 6px 0 var(--gold-d)}
+.node.pulse{animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 6px 0 var(--cd),0 0 0 0 rgba(88,204,2,.5)}50%{box-shadow:0 6px 0 var(--cd),0 0 0 12px rgba(88,204,2,0)}}
+.node-label{font-size:12px;font-weight:800;color:var(--ink-l);max-width:150px;text-align:center;line-height:1.25}
+
+/* ---------- LESSON ---------- */
+.lesson-bar{
+  position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;
+  padding:14px 0 12px;background:linear-gradient(var(--bg) 75%,transparent);
+}
+.icon-btn{
+  background:none;border:none;font-size:22px;font-weight:900;color:#afafaf;
+  cursor:pointer;padding:4px 8px;line-height:1;font-family:inherit;
+}
+.icon-btn:hover{color:var(--ink)}
+.progress-track{flex:1;height:16px;background:#e5e5e5;border-radius:99px;overflow:hidden}
+.progress-fill{height:100%;width:0;border-radius:99px;background:var(--green);transition:width .35s cubic-bezier(.2,.8,.2,1)}
+.hearts-row{display:flex;gap:2px;font-size:16px;min-width:78px;justify-content:flex-end}
+
+.question-area{padding-top:8px}
+.beer-swatch{
+  width:88px;height:88px;border-radius:50%;margin:6px auto 18px;position:relative;
+  box-shadow:inset -10px -12px 24px rgba(0,0,0,.28), 0 8px 18px rgba(0,0,0,.14);
+  border:5px solid #fff;
+}
+.beer-swatch::after{
+  content:'';position:absolute;top:6px;left:14px;width:22px;height:14px;border-radius:50%;
+  background:rgba(255,255,255,.35);filter:blur(3px);transform:rotate(-25deg);
+}
+.prompt{font-size:20px;font-weight:900;line-height:1.35;margin:0 0 8px;letter-spacing:-.3px}
+.spec{
+  display:inline-block;font-size:12px;font-weight:800;color:#9a6a00;background:#fff3d1;
+  border-radius:10px;padding:5px 12px;margin-bottom:16px;
+}
+.choices{display:flex;flex-direction:column;gap:12px;margin-top:14px}
+.choice{
+  display:flex;align-items:center;gap:12px;width:100%;text-align:left;font-family:inherit;
+  background:#fff;border:2px solid var(--line);border-bottom-width:5px;border-radius:16px;
+  padding:15px 16px;font-size:15.5px;font-weight:800;color:var(--ink);cursor:pointer;
+  transition:background .12s,border-color .12s,transform .08s;
+}
+.choice:hover:not(.dis){border-color:#cfcfcf;background:#fafafa}
+.choice:active:not(.dis){transform:translateY(3px);border-bottom-width:2px}
+.choice .idx{
+  min-width:26px;height:26px;border-radius:8px;background:#f1f1f1;color:#9a9a9a;
+  font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;flex:none;
+}
+.choice.correct{background:var(--green-l);border-color:var(--green);color:#3a7a00}
+.choice.correct .idx{background:var(--green);color:#fff}
+.choice.wrong{background:var(--red-l);border-color:var(--red);color:#c62828}
+.choice.wrong .idx{background:var(--red);color:#fff}
+.choice.dis{cursor:default}
+
+/* ---------- FEEDBACK ---------- */
+.feedback{
+  position:fixed;left:0;right:0;bottom:0;z-index:200;
+  transform:translateY(130%);transition:transform .28s cubic-bezier(.2,.9,.3,1.2);
+  padding:0 0 0;
+}
+.feedback.show{transform:translateY(0)}
+.fb-inner{max-width:540px;margin:0 auto;padding:20px 20px 26px;border-radius:22px 22px 0 0}
+.feedback.ok .fb-inner{background:var(--green-l);border-top:3px solid var(--green)}
+.feedback.bad .fb-inner{background:var(--red-l);border-top:3px solid var(--red)}
+.fb-head{display:flex;align-items:center;gap:10px;font-size:19px;font-weight:900}
+.feedback.ok .fb-head{color:#3a7a00}
+.feedback.bad .fb-head{color:#c62828}
+#fbIcon{
+  width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:17px;color:#fff;flex:none;
+}
+.feedback.ok #fbIcon{background:var(--green)}
+.feedback.bad #fbIcon{background:var(--red)}
+#fbText{margin:10px 0 18px;font-size:14.5px;font-weight:700;line-height:1.45;color:#4a4a4a}
+.feedback .btn{width:100%}
+.btn{
+  font-family:inherit;font-weight:900;font-size:15px;letter-spacing:.6px;text-transform:uppercase;
+  color:#fff;background:var(--green);border:none;border-radius:16px;padding:15px 20px;cursor:pointer;
+  box-shadow:0 5px 0 var(--green-d);transition:transform .08s,box-shadow .08s;
+}
+.btn:active{transform:translateY(5px);box-shadow:0 0 0 var(--green-d)}
+.btn.blue{background:var(--blue);box-shadow:0 5px 0 var(--blue-d)}
+.btn.blue:active{box-shadow:0 0 0 var(--blue-d)}
+.btn.gold{background:var(--gold);box-shadow:0 5px 0 var(--gold-d);color:#7a5a00}
+.btn.gold:active{box-shadow:0 0 0 var(--gold-d)}
+
+/* ---------- RESULT ---------- */
+.result-inner{text-align:center;padding:50px 0 0;animation:pop .4s cubic-bezier(.2,.9,.3,1.3)}
+@keyframes pop{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+.result-emoji{font-size:74px;line-height:1;animation:bounce 1s infinite alternate}
+@keyframes bounce{to{transform:translateY(-10px)}}
+.result-inner h1{font-size:26px;font-weight:900;margin:14px 0 4px;letter-spacing:-.5px}
+.result-inner .sub{color:var(--ink-l);font-weight:700;font-size:14px;margin:0 0 22px}
+.stars{font-size:40px;letter-spacing:6px;margin-bottom:26px}
+.stars span{display:inline-block;animation:pop .4s backwards}
+.result-stats{display:flex;gap:12px;justify-content:center;margin-bottom:22px;flex-wrap:wrap}
+.result-stats>div{
+  flex:1;max-width:130px;background:#fff;border:2px solid var(--line);border-bottom-width:5px;
+  border-radius:18px;padding:14px 8px;
+}
+.result-stats span{display:block;font-size:24px;font-weight:900;color:var(--gold-d)}
+.result-stats span.blue{color:var(--blue-d)}
+.result-stats span.coin{color:#b8860b}
+.result-stats small{font-size:11.5px;font-weight:800;color:var(--ink-l);text-transform:uppercase;letter-spacing:.5px}
+
+/* consejo del consultor en resultado */
+.result-tip{
+  background:#fff8e1;border:2px solid #ffe082;border-radius:16px;
+  padding:12px 14px;margin:0 0 24px;text-align:left;display:flex;gap:10px;align-items:flex-start;
+}
+.result-tip img{width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);flex:none}
+.result-tip p{margin:0;font-size:13px;font-weight:700;color:#5a4a00;line-height:1.4}
+.result-tip p b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:#9a7a00;margin-bottom:2px}
+#btnResCont{width:100%;max-width:340px}
+
+/* ---------- CONFETTI ---------- */
+.confetti{position:fixed;top:-50px;z-index:9999;pointer-events:none;animation:fall 2.8s linear forwards}
+@keyframes fall{to{transform:translateY(115vh) rotate(600deg);opacity:.2}}
+
+/* ---------- TOAST ---------- */
+.toast{
+  position:fixed;left:50%;top:22px;transform:translate(-50%,-80px);z-index:900;
+  background:var(--ink);color:#fff;font-weight:800;font-size:13.5px;padding:11px 20px;border-radius:99px;
+  transition:transform .3s cubic-bezier(.2,.9,.3,1.3);white-space:nowrap;
+}
+.toast.show{transform:translate(-50%,0)}
+
+@media(max-width:400px){
+  .prompt{font-size:18px}
+  .node{width:66px;height:66px;font-size:25px}
+  .hero h1{font-size:22px}
+  .consultor-photo{width:54px;height:54px}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ================= HOME ================= -->
+  <section id="screen-home" class="screen active">
+    <header class="topbar">
+      <div class="stat streak">🔥 <span id="hStreak">0</span></div>
+      <div class="stat xp">⚡ <span id="hXp">0</span> XP</div>
+      <div class="stat coins">🪙 <span id="hCoins">0</span></div>
+      <div class="stat">🏅 <span id="hStars">0</span></div>
+    </header>
+
+    <div class="hero">
+      <h1>🍺 BeerQuest</h1>
+      <p>Domina los estilos de cerveza artesanal según la guía <b>BJCP</b>. ¡Aprende juzgando!</p>
+      <div class="hero-bar"><span id="heroBar" style="width:0%"></span></div>
+      <div class="hero-sub" id="heroSub">0 de 24 lecciones completadas</div>
+    </div>
+
+    <!-- Consultor José Guerrero -->
+    <div class="consultor-card">
+      <img class="consultor-photo" src="https://i.postimg.cc/kMVyVY3b/Whats-App-Image-2026-03-28-at-11-58-56-AM.jpg" alt="José Guerrero, consultor cervecero">
+      <div class="consultor-info">
+        <p class="consultor-name">José Guerrero</p>
+        <p class="consultor-role">Consultor cervecero · Creador de BeerQuest</p>
+        <p class="consultor-tip" id="homeTip">Cargando consejo…</p>
+      </div>
+    </div>
+
+    <div id="unitsList"></div>
+  </section>
+
+  <!-- ================= LESSON ================= -->
+  <section id="screen-lesson" class="screen">
+    <header class="lesson-bar">
+      <button id="btnClose" class="icon-btn" title="Salir">✕</button>
+      <div class="progress-track"><div id="progressBar" class="progress-fill"></div></div>
+      <div class="hearts-row" id="heartsRow"></div>
+    </header>
+    <div id="questionArea" class="question-area"></div>
+  </section>
+
+  <!-- ================= RESULT ================= -->
+  <section id="screen-result" class="screen">
+    <div class="result-inner">
+      <div class="result-emoji" id="resEmoji">🎉</div>
+      <h1 id="resTitle">¡Lección completada!</h1>
+      <p class="sub" id="resSub">¡Sigue así, futuro juez cervecero!</p>
+      <div class="stars" id="resStars"></div>
+      <div class="result-stats">
+        <div><span id="resXp">0</span><small>XP ganado</small></div>
+        <div><span class="coin" id="resCoins">0</span><small>Monedas</small></div>
+        <div><span class="blue" id="resAcc">0%</span><small>Precisión</small></div>
+      </div>
+
+      <div class="result-tip">
+        <img src="https://i.postimg.cc/kMVyVY3b/Whats-App-Image-2026-03-28-at-11-58-56-AM.jpg" alt="José Guerrero">
+        <p><b>Consejo de José Guerrero</b><span id="resultTip">…</span></p>
+      </div>
+
+      <button class="btn" id="btnResCont">Continuar</button>
+    </div>
+  </section>
+
+  <div class="feedback" id="feedback">
+    <div class="fb-inner">
+      <div class="fb-head"><span id="fbIcon">✓</span><span id="fbTitle">¡Correcto!</span></div>
+      <p id="fbText"></p>
+      <button class="btn" id="btnContinue">Continuar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========================================================
+   COLORES SRM → HEX
+   ========================================================= */
+const SRM_STOPS = [
+  [1,'#FFE699'],[2,'#FFD878'],[3,'#FFCA5A'],[4,'#FFBF42'],[5,'#FBB123'],
+  [6,'#F8A600'],[7,'#F39C00'],[8,'#EA8B00'],[9,'#DC8000'],[10,'#D77100'],
+  [11,'#C96A00'],[12,'#BE5F00'],[13,'#B25600'],[14,'#A64B00'],[15,'#9C4100'],
+  [16,'#923800'],[17,'#8A2F00'],[18,'#812700'],[19,'#7A2100'],[20,'#721C00'],
+  [22,'#621400'],[24,'#550F00'],[26,'#4A0B00'],[28,'#400800'],[30,'#370600'],
+  [35,'#270400'],[40,'#1A0300']
+];
+function hex2rgb(h){return [parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];}
+function rgb2hex(r,g,b){return '#'+[r,g,b].map(v=>Math.round(v).toString(16).padStart(2,'0')).join('');}
+function srmToHex(srm){
+  if(srm<=SRM_STOPS[0][0]) return SRM_STOPS[0][1];
+  for(let i=0;i<SRM_STOPS.length-1;i++){
+    const [a,ca]=SRM_STOPS[i], [b,cb]=SRM_STOPS[i+1];
+    if(srm>=a && srm<=b){
+      const t=(srm-a)/(b-a);
+      const A=hex2rgb(ca), B=hex2rgb(cb);
+      return rgb2hex(A[0]+(B[0]-A[0])*t, A[1]+(B[1]-A[1])*t, A[2]+(B[2]-A[2])*t);
+    }
+  }
+  return SRM_STOPS[SRM_STOPS.length-1][1];
+}
+
+/* =========================================================
+   CONSEJOS Y DATOS CURIOSOS DE JOSÉ GUERRERO
+   ========================================================= */
+const CONSEJOS = [
+  "El BJCP no es una receta, es una guía. Dos cervezas del mismo estilo pueden ser muy distintas y ambas ser correctas.",
+  "Para juzgar bien, primero calienta la cerveza: a 10-14 °C los aromas se expresan mucho mejor que a temperatura de nevera.",
+  "El lúpulo es una flor, no una fruta. Su amargor se mide en IBU, pero su aroma es lo que enamora.",
+  "La levadura es el ingrediente más subestimado. Ella decide si tendrás plátano, clavo, frutas o funk.",
+  "El color no lo es todo: una Schwarzbier parece una stout pero es ligera y seca. ¡No te dejes engañar por los ojos!",
+  "El agua es el 90-95% de la cerveza. Ajustar sus minerales puede transformar por completo un estilo.",
+  "Las IPAs nacieron para sobrevivir largos viajes a la India. El lúpulo era un conservante natural.",
+  "En una cata, usa siempre un vaso limpio y sin residuos de jabón. Los aromas se pegan a cualquier grasa.",
+  "El diacetilo (aroma a mantequilla) es un defecto en la mayoría de estilos. Si lo detectas, algo falló en la fermentación.",
+  "No juzgues una cerveza por su espuma: aunque es parte de la apariencia, el aroma y el sabor son los que deciden.",
+  "Las cervezas belgas son famosas por su complejidad. La levadura y las especias crean capas de sabor que no encontrarás en otros estilos.",
+  "El estilo Munich Helles se creó en Múnich como respuesta suave a las pilsners checas, que eran demasiado amargas para el paladar local.",
+  "La Berliner Weisse era tan popular en Berlín que Napoleón la llamó 'el champagne del norte'.",
+  "El estilo Gose casi desapareció tras la Segunda Guerra Mundial. Hoy es un símbolo de la recuperación de estilos históricos alemanes.",
+  "La Gueuze es un blend de lambics de 1, 2 y 3 años. La paciencia es su ingrediente secreto.",
+  "Un juez BJCP nunca dice 'me gusta' o 'no me gusta'. Describe, compara con el estilo y justifica la puntuación.",
+  "El ABV no lo es todo: una Session IPA puede tener 4% y ser tan aromática como una Double IPA.",
+  "La maltosa Munich Helles y la amarga German Pilsner son primas alemanas, pero con personalidades opuestas.",
+  "El 4-vinil guayacol (clavo) y el isoamil acetato (plátano) son la firma de las Weissbier alemanas. ¡Aprende a reconocerlos!",
+  "En una competición, la temperatura de servicio ideal para la mayoría de estilos oscuros es 12-14 °C, no 4 °C."
+];
+
+/* =========================================================
+   CONTENIDO BJCP — 8 UNIDADES / 24 LECCIONES
+   ========================================================= */
+const UNITS = [
+/* ================== UNIDAD 1 ================== */
+{
+  id:'u1', title:'Fundamentos', sub:'El idioma del juez', emoji:'📜',
+  color:'#ffb703', dark:'#e09b00',
+  lessons:[
+    { id:'u1l1', title:'¿Qué es el BJCP?', icon:'📜', qs:[
+      { t:'mc', q:'¿Qué significan las siglas BJCP?',
+        opts:['Beer Judge Certification Program','Brewing Journal of Craft Pints','Beer & Juice Control Program','Bavarian Judges Council for Pilsners'], a:0,
+        exp:'BJCP = Beer Judge Certification Program. Certifica jueces cerveceros y publica la guía de estilos de referencia mundial.' },
+      { t:'tf', q:'La guía BJCP sirve para describir y juzgar cervezas en concursos.', a:true,
+        exp:'Exacto. Es su función principal: dar un lenguaje común para describir y evaluar cervezas.' },
+      { t:'mc', q:'¿Cuántas categorías de estilo tiene la guía BJCP 2021?',
+        opts:['12','21','34','60'], a:2,
+        exp:'La edición 2021 organiza todos los estilos en 34 categorías, con más de 120 subestilos.' },
+      { t:'mc', q:'¿Qué describe mejor un "estilo" de cerveza?',
+        opts:['La marca que la elabora','Un conjunto de características típicas: aroma, sabor, color y amargor','El precio de venta','El país donde se bebe'], a:1,
+        exp:'Un estilo es un conjunto de rasgos esperables (no una receta cerrada). Marca rangos, no verdades absolutas.' },
+      { t:'tf', q:'Dos cervezas del mismo estilo pueden tener diferencias entre sí.', a:true,
+        exp:'Cierto. El estilo define un rango: hay variación entre cervecerías, lotes y versiones.' }
+    ]},
+    { id:'u1l2', title:'Los números clave', icon:'🔢', qs:[
+      { t:'mc', q:'¿Qué mide el IBU?',
+        opts:['El color','El amargor','El alcohol','La carbonatación'], a:1,
+        exp:'International Bitterness Units: mide el amargor aportado por los ácidos del lúpulo.' },
+      { t:'mc', q:'¿Qué mide el SRM?',
+        opts:['El color de la cerveza','El amargor','La densidad','El aroma'], a:0,
+        exp:'Standard Reference Method: escala de color. De 2 (pajizo) a 40+ (negro absoluto).' },
+      { t:'mc', q:'¿Qué mide el ABV?',
+        opts:['Los litros de barril','El alcohol por volumen','La acidez','El azúcar residual'], a:1,
+        exp:'Alcohol By Volume: el porcentaje de alcohol de la cerveza.' },
+      { t:'mc', q:'¿Qué es la OG (densidad original)?',
+        opts:['Los azúcares del mosto antes de fermentar','El color final','El amargor final','La temperatura de fermentación'], a:0,
+        exp:'La OG mide los azúcares disueltos antes de fermentar; la FG, los que quedan después. Su diferencia estima el alcohol.' },
+      { t:'tf', q:'Un SRM de 3 indica una cerveza muy oscura.', a:false,
+        exp:'Falso. SRM 3 es muy pálida, casi pajiza. Hablamos de cervezas negras por encima de SRM 30.' }
+    ]},
+    { id:'u1l3', title:'Aroma y sabor', icon:'👃', qs:[
+      { t:'mc', q:'¿Qué compuesto da el aroma a plátano típico de las Weissbier?',
+        opts:['Isoamil acetato','4-vinil guayacol','DMS','Diacetilo'], a:0,
+        exp:'El isoamil acetato es un éster que recuerda al plátano. El 4-VG da clavo.' },
+      { t:'mc', q:'¿Qué compuesto aporta el aroma a clavo?',
+        opts:['Isoamil acetato','4-vinil guayacol','Linalol','Acetaldehído'], a:1,
+        exp:'El 4-vinil guayacol (4-VG) es fenólico, especiado, muy típico de las levaduras Weizen.' },
+      { t:'mc', q:'El lúpulo aporta principalmente...',
+        opts:['Dulzor y cuerpo','Amargor y aromas cítricos, florales o resinosos','Color negro','Alcohol'], a:1,
+        exp:'Los alfa ácidos dan amargor; los aceites esenciales, aroma y sabor.' },
+      { t:'mc', q:'La malta aporta principalmente...',
+        opts:['Amargor intenso','Dulzor, pan, caramelo o tostado','Acidez láctica','Sal'], a:1,
+        exp:'Los azúcares y compuestos de la malta dan dulzor, cuerpo y notas de pan, caramelo, chocolate o tostado.' },
+      { t:'tf', q:'La levadura solo produce alcohol y no influye en el sabor.', a:false,
+        exp:'Falso. La levadura genera ésteres y fenoles que definen gran parte del aroma: frutal, especiado, etc.' }
+    ]}
+  ]
+},
+/* ================== UNIDAD 2 ================== */
+{
+  id:'u2', title:'Lagers del mundo', sub:'Fermentadas en frío', emoji:'❄️',
+  color:'#1cb0f6', dark:'#0f8fc7',
+  lessons:[
+    { id:'u2l1', title:'Lagers ligeras', icon:'🍺', qs:[
+      { t:'mc', swatch:2, spec:'ABV 2.8-4.2% · IBU 8-12 · SRM 2-3',
+        q:'Color pajizo, muy ligera, seca, poco amarga y extremadamente refrescante. ¿Qué estilo es?',
+        opts:['American Light Lager','Munich Helles','Czech Premium Pale Lager','Witbier'], a:0,
+        exp:'American Light Lager: la versión más ligera de la lager americana. Piensa en Bud Light, Coors Light o Miller Lite.' },
+      { t:'tf', q:'Una American Light Lager se caracteriza por su fuerte amargor y su cuerpo pleno.', a:false,
+        exp:'Falso. Es todo lo contrario: muy poco amarga (8-12 IBU), ligera y de final seco.' },
+      { t:'mc', q:'¿A qué temperatura fermenta típicamente una lager?',
+        opts:['20-25 °C','7-13 °C','30-35 °C','40 °C'], a:1,
+        exp:'Las levaduras lager trabajan en frío (7-13 °C), lo que da un perfil limpio y sin ésteres.' },
+      { t:'mc', q:'¿Cuál es un ejemplo comercial típico de American Light Lager?',
+        opts:['Guinness','Bud Light','Pilsner Urquell','Duvel'], a:1,
+        exp:'Bud Light, Coors Light y Miller Lite son los ejemplos clásicos del estilo.' },
+      { t:'mc', q:'El término "lager" viene del alemán "lagern", que significa...',
+        opts:['Almacenar / madurar en frío','Hervir','Tostar','Filtrar'], a:0,
+        exp:'"Lagern" = almacenar. La clave es la maduración prolongada en frío.' }
+    ]},
+    { id:'u2l2', title:'Pilsners y Helles', icon:'🌾', qs:[
+      { t:'mc', swatch:4, spec:'ABV 4.2-5.8% · IBU 30-45 · SRM 3.5-6',
+        q:'Dorada, con lúpulo Saaz, amargor redondo y final limpio y seco. Es el original checo.',
+        opts:['Czech Premium Pale Lager','German Pilsner','Munich Helles','Kölsch'], a:0,
+        exp:'Czech Premium Pale Lager. Pilsner Urquell es su ejemplo más famoso.' },
+      { t:'mc', q:'¿Cuál de las dos es más amarga?',
+        opts:['Munich Helles (16-22 IBU)','German Pilsner (22-40 IBU)'], a:1,
+        exp:'La German Pilsner es notablemente más amarga y seca; la Helles es maltosa y suave.' },
+      { t:'tf', q:'La Munich Helles es más maltosa y menos amarga que una German Pilsner.', a:true,
+        exp:'Correcto. La Helles se creó en Munich precisamente como respuesta suave a las pilsners.' },
+      { t:'mc', q:'Estilo alemán pálido, maltoso y suave, pensado para beber por litro en Munich.',
+        opts:['Munich Helles','Schwarzbier','Altbier','Rauchbier'], a:0,
+        exp:'Munich Helles: "hell" significa claro. Color dorado pálido, cuerpo ligero y amargor muy contenido.' },
+      { t:'mc', q:'Pilsner Urquell es el ejemplo clásico de...',
+        opts:['German Pilsner','Czech Premium Pale Lager','American Lager','Munich Helles'], a:1,
+        exp:'Es la Czech Premium Pale Lager original, de Plzeň (Pilsen), desde 1842.' }
+    ]},
+    { id:'u2l3', title:'Oscuras alemanas', icon:'🌑', qs:[
+      { t:'mc', q:'Lager negra, seca, con notas de chocolate y café, más ligera que una stout.',
+        opts:['Schwarzbier','Doppelbock','Märzen','Dunkelweizen'], a:0,
+        exp:'Schwarzbier ("cerveza negra"): el color engaña, es sorprendentemente ligera y seca.' },
+      { t:'mc', q:'Rauchbier se caracteriza por...',
+        opts:['Aroma a malta ahumada, como a bacon','Ser muy lupulada','Ser ácida','Ser sin gluten'], a:0,
+        exp:'Se elabora con maltas secadas sobre fuego de madera, lo que aporta un intenso carácter ahumado.' },
+      { t:'tf', q:'El Doppelbock es una lager oscura, maltosa y fuerte, con notas de pan y caramelo.', a:true,
+        exp:'Cierto. Es la versión "doble" del bock, con 7-10% ABV y mucho carácter maltoso.' },
+      { t:'mc', q:'¿Qué estilo tiene un ABV de 7-10% y un carácter maltoso y tostado?',
+        opts:['Munich Helles','Doppelbock','Kölsch','Berliner Weisse'], a:1,
+        exp:'Doppelbock. Los monjes la llamaban "pan líquido" por su aporte energético en Cuaresma.' },
+      { t:'mc', q:'La Märzen/Oktoberfest es...',
+        opts:['Una lager ámbar, maltosa y tostada, típica de la fiesta de octubre','Una ale belga fuerte','Una stout irlandesa','Una sour de trigo'], a:0,
+        exp:'Märzen (marzo) se elaboraba al final de la temporada de brewing y se servía en otoño.' }
+    ]},
+    { id:'u2l4', title:'Lagers internacionales', icon:'🌍', qs:[
+      { t:'mc', q:'International Pale Lager es...',
+        opts:['Una lager dorada, limpia y de amargor moderado, popular en todo el mundo','Una lager negra','Una ale belga','Una sour'], a:0,
+        exp:'Estilos como Corona, Heineken o Stella Artois caen en esta categoría: ligeras, refrescantes y de perfil limpio.' },
+      { t:'tf', q:'La International Amber Lager tiene un carácter maltoso con notas a caramelo y tostado ligero.', a:true,
+        exp:'Cierto. Es una lager ámbar de cuerpo medio, con dulzor de malta y un amargor equilibrado.' },
+      { t:'mc', q:'¿Qué estilo es una lager oscura de cuerpo medio, con notas a chocolate y caramelo, pero sin el tostado intenso de una stout?',
+        opts:['International Dark Lager','Schwarzbier','Doppelbock','Baltic Porter'], a:0,
+        exp:'International Dark Lager: más suave y accesible que otras oscuras, con un tostado moderado.' },
+      { t:'mc', q:'La Czech Amber Lager se caracteriza por...',
+        opts:['Un color ámbar, maltosidad y un amargor de lúpulo Saaz equilibrado','Ser muy pálida','Ser muy amarga','Ser ahumada'], a:0,
+        exp:'Es una lager checa de color ámbar, con buen cuerpo y un final limpio y lupulado.' },
+      { t:'tf', q:'La Czech Dark Lager es una lager negra, maltosa y con notas a frutas oscuras.', a:true,
+        exp:'Cierto. A pesar de su color, es suave y redonda, con un tostado elegante y nada agresivo.' }
+    ]}
+  ]
+},
+/* ================== UNIDAD 3 ================== */
+{
+  id:'u3', title:'Trigo y Bélgica', sub:'Especias y levaduras salvajes', emoji:'🍌',
+  color:'#ce82ff', dark:'#a568cc',
+  lessons:[
+    { id:'u3l1', title:'Cervezas de trigo', icon:'🌾', qs:[
+      { t:'mc', q:'Aroma dominante a plátano y clavo, turbia y muy refrescante.',
+        opts:['Weissbier (Hefeweizen)','Witbier','Saison','Kölsch'], a:0,
+        exp:'Weissbier: la levadura de trigo alemana produce esos ésteres (plátano) y fenoles (clavo) tan característicos.' },
+      { t:'tf', q:'La Witbier se elabora tradicionalmente con cilantro y cáscara de naranja.', a:true,
+        exp:'Cierto. Esos dos ingredientes son parte de su definición en el BJCP.' },
+      { t:'mc', q:'Dunkelweizen es...',
+        opts:['Una weissbier oscura, con plátano y pan tostado','Una lager negra','Una sour de trigo','Una IPA de trigo'], a:0,
+        exp:'Dunkelweizen combina el carácter de la levadura Weizen con maltas tostadas.' },
+      { t:'mc', swatch:3, spec:'ABV 4.5-5.5% · IBU 8-20 · SRM 2-4',
+        q:'Muy pálida, turbia, especiada con cilantro y naranja, ligera y refrescante.',
+        opts:['Witbier','Hefeweizen','Berliner Weisse','Gose'], a:0,
+        exp:'Witbier (blanche): trigo sin maltear, especias y una acidez muy ligera.' },
+      { t:'mc', q:'¿Qué levadura da el carácter típico de las cervezas de trigo alemanas?',
+        opts:['Levadura lager','Levadura ale de trigo (Weizen)','Brettanomyces','Lactobacillus'], a:1,
+        exp:'La levadura Weizen es la responsable del plátano (isoamil acetato) y el clavo (4-VG).' }
+    ]},
+    { id:'u3l2', title:'Ales de abadía', icon:'⛪', qs:[
+      { t:'mc', q:'Cerveza belga marrón, con notas a pasas, ciruela y caramelo, de 6-7.6% ABV.',
+        opts:['Dubbel','Tripel','Quadrupel','Saison'], a:0,
+        exp:'Dubbel: oscura, maltosa y frutal. Westmalle Dubbel es la referencia.' },
+      { t:'mc', q:'Tripel se caracteriza por...',
+        opts:['Ser dorada, fuerte, especiada y con alcohol perceptible','Ser negra y muy maltosa','Ser ácida','Ser sin alcohol'], a:0,
+        exp:'Tripel: pálida, 7.5-9.5% ABV, muy carbonatada y con un final seco y cálido.' },
+      { t:'tf', q:'Una cerveza trapense se elabora dentro de un monasterio trapense.', a:true,
+        exp:'Cierto. Solo 14 monasterios en el mundo pueden usar el sello "Authentic Trappist Product".' },
+      { t:'mc', q:'¿Cuál de estos estilos suele tener más alcohol?',
+        opts:['Dubbel','Tripel','Quadrupel','Witbier'], a:2,
+        exp:'Quadrupel: 9-14% ABV. Es la más potente de la familia de abadía.' },
+      { t:'mc', q:'El estilo Quadrupel tiene un ABV aproximado de...',
+        opts:['3-4%','5-6%','9-14%','20-25%'], a:2,
+        exp:'Entre 9% y 14%. Oscura, densa, con frutas oscuras y mucho alcohol cálido.' }
+    ]},
+    { id:'u3l3', title:'Saison y ácidas', icon:'🍋', qs:[
+      { t:'mc', q:'Rústica, muy seca, especiada, frutal y con alta carbonatación. Originaria de Valonia.',
+        opts:['Saison','Witbier','Dubbel','Lambic'], a:0,
+        exp:'Saison: la cerveza de temporada de los granjeros belgas. Seca, compleja y refrescante.' },
+      { t:'mc', q:'Berliner Weisse es...',
+        opts:['Ácida, de trigo, ligera y muy refrescante','Muy amarga','Oscura y maltosa','Con sal y cilantro'], a:0,
+        exp:'Berliner Weisse: 2.8-3.8% ABV, acidez láctica limpia y carbonatación altísima.' },
+      { t:'mc', q:'¿Qué estilo lleva sal y cilantro como ingredientes característicos?',
+        opts:['Gose','Gueuze','Kölsch','Altbier'], a:0,
+        exp:'Gose: cerveza alemana de Leipzig con sal, cilantro y una acidez láctica suave.' },
+      { t:'tf', q:'Las Lambic fermentan espontáneamente gracias a levaduras y bacterias del ambiente.', a:true,
+        exp:'Cierto. Se enfrían en cubas abiertas (coolship) y fermentan con la microbiota del valle del Zenne.' },
+      { t:'mc', q:'Gueuze es...',
+        opts:['Una mezcla de lambics de distintos años','Una IPA belga','Una stout','Una lager'], a:0,
+        exp:'Gueuze es un blend de lambics jóvenes y viejos que refermenta en botella.' }
+    ]},
+    { id:'u3l4', title:'Ales belgas y francesas', icon:'🇧🇪', qs:[
+      { t:'mc', q:'Bière de Garde es...',
+        opts:['Una ale francesa maltosa, de color ámbar a cobrizo, con notas a caramelo y tierra','Una lager belga','Una sour','Una IPA'], a:0,
+        exp:'Bière de Garde ("cerveza de guarda") se elaboraba al inicio de la primavera para conservarla durante el verano.' },
+      { t:'tf', q:'La Belgian Strong Golden Ale es una ale dorada, fuerte y muy carbonatada, con ésteres frutales y alcohol cálido.', a:true,
+        exp:'Cierto. Duvel es el ejemplo clásico: 8.5% ABV, muy carbonatada y con un final seco.' },
+      { t:'mc', q:'¿Qué estilo belga se caracteriza por su acidez láctica, frutas y a veces un toque de funk?',
+        opts:['Oud Bruin','Dubbel','Tripel','Witbier'], a:0,
+        exp:'Oud Bruin (Flanders Brown): ale envejecida en madera con acidez y notas a frutas oscuras.' },
+      { t:'mc', q:'Flanders Red Ale es...',
+        opts:['Una ale ácida, de color rojizo, con notas a cereza y cuero','Una lager negra','Una stout','Una IPA'], a:0,
+        exp:'Flanders Red: fermenta con levaduras mixtas y madura en roble, lo que le da una acidez compleja.' },
+      { t:'tf', q:'La Belgian Blond Ale es una ale dorada, moderadamente fuerte y fácil de beber.', a:true,
+        exp:'Cierto. Es una versión más accesible de la strong golden ale, con 6-7.5% ABV.' }
+    ]}
+  ]
+},
+/* ================== UNIDAD 4 ================== */
+{
+  id:'u4', title:'Islas Británicas', sub:'Ales de pub', emoji:'🇬🇧',
+  color:'#e63946', dark:'#b32b36',
+  lessons:[
+    { id:'u4l1', title:'Ales británicas', icon:'🍺', qs:[
+      { t:'mc', swatch:35, spec:'ABV 4.0-4.5% · IBU 30-45',
+        q:'Negra, seca, con notas de café y tostado, ligera y con final amargo. Guinness es su ejemplo.',
+        opts:['Dry Stout','Porter','Barleywine','Brown Ale'], a:0,
+        exp:'Irish Dry Stout: sorprendentemente ligera para su color, con un tostado seco y café.' },
+      { t:'mc', q:'Porter se caracteriza por...',
+        opts:['Ser oscura, maltosa, con chocolate y caramelo','Ser muy amarga y cítrica','Ser ácida','Ser pálida'], a:0,
+        exp:'Porter nació en el Londres del siglo XVIII como cerveza de los porteadores.' },
+      { t:'tf', q:'El English Barleywine es una ale fuerte y maltosa, con mucho alcohol y notas a fruta madura.', a:true,
+        exp:'Cierto. 8-12% ABV, compleja, con mucho cuerpo y un final cálido y frutal.' },
+      { t:'mc', q:'Wee Heavy (Scottish Ale fuerte) es...',
+        opts:['Maltosa, con caramelo y alcohol cálido','Muy lupulada','Ácida','De trigo'], a:0,
+        exp:'También llamada "Scotch Ale": mucho cuerpo, dulzor de caramelo y un final largo.' },
+      { t:'mc', q:'El estilo "Bitter" inglés es...',
+        opts:['Una pale ale de sesión, dorada-ámbar, con lúpulo terroso','Una IPA doble','Una stout','Una sour'], a:0,
+        exp:'A pesar del nombre, no es especialmente amarga: es la cerveza de pub por excelencia.' }
+    ]},
+    { id:'u4l2', title:'Stouts y más', icon:'🖤', qs:[
+      { t:'mc', q:'¿Qué diferencia a una Oatmeal Stout?',
+        opts:['La avena aporta cuerpo y una suavidad sedosa','Lleva lactosa','Es sin alcohol','Es de trigo'], a:0,
+        exp:'La avena añade beta-glucanos: más cuerpo, textura cremosa y un amargor redondeado.' },
+      { t:'mc', q:'Milk Stout / Sweet Stout se caracteriza por...',
+        opts:['Llevar lactosa, que aporta dulzor y cuerpo','Ser muy amarga','Ser ácida','Ser ahumada'], a:0,
+        exp:'La lactosa no fermenta, así que deja azúcar residual: dulzor y cuerpo extra.' },
+      { t:'tf', q:'La Irish Stout suele tener menos alcohol y más sequedad que una American Stout.', a:true,
+        exp:'Cierto. La americana es más fuerte, más lupulada y con más cuerpo.' },
+      { t:'mc', q:'¿Qué estilo británico es una ale fuerte, oscura y muy maltosa, con 8-12% ABV?',
+        opts:['English Barleywine','Bitter','Mild','Porter'], a:0,
+        exp:'English Barleywine: la joya de las ale británicas, para beber con calma y temperatura.' },
+      { t:'mc', q:'El estilo Mild Ale es...',
+        opts:['Una ale oscura, suave, maltosa y de bajo alcohol','Una IPA fuerte','Una sour','Una lager'], a:0,
+        exp:'Mild era la cerveza de consumo diario en Inglaterra: 3-4% ABV y muy fácil de beber.' }
+    ]},
+    { id:'u4l3', title:'Ales escocesas e irlandesas', icon:'🏴', qs:[
+      { t:'mc', q:'Irish Red Ale se caracteriza por...',
+        opts:['Un color rojizo, maltosidad y un final seco con un toque tostado','Ser muy amarga','Ser ácida','Ser negra'], a:0,
+        exp:'Irish Red Ale es esencialmente una adaptación de la Bitter inglesa con menos lúpulo y un tostado que da color y sequedad.' },
+      { t:'tf', q:'La Scottish Light Ale es una ale maltosa, de bajo alcohol y color ámbar.', a:true,
+        exp:'Cierto. Las Scottish Ales se dividen en Light, Heavy y Export, con alcohol creciente.' },
+      { t:'mc', q:'¿Qué estilo escocés es una ale fuerte, maltosa y con notas a caramelo y frutas oscuras?',
+        opts:['Wee Heavy (Scotch Ale)','Scottish Light','Scottish Heavy','Irish Stout'], a:0,
+        exp:'Wee Heavy: 6.5-10% ABV, con mucho cuerpo y un final cálido y dulce.' },
+      { t:'mc', q:'La English Brown Ale es...',
+        opts:['Una ale marrón, maltosa, con notas a nuez y chocolate','Una lager','Una sour','Una IPA'], a:0,
+        exp:'Newcastle Brown Ale es el ejemplo más famoso: suave, maltosa y muy bebible.' },
+      { t:'tf', q:'La Dark British Beer incluye estilos como la English Porter y la London Brown Ale.', a:true,
+        exp:'Cierto. Son cervezas oscuras de tradición británica, con maltosidad y tostado moderado.' }
+    ]}
+  ]
+},
+/* ================== UNIDAD 5 ================== */
+{
+  id:'u5', title:'Ales americanas', sub:'El imperio del lúpulo', emoji:'🇺🇸',
+  color:'#58cc02', dark:'#48a300',
+  lessons:[
+    { id:'u5l1', title:'Pale Ales e IPAs', icon:'🌿', qs:[
+      { t:'mc', swatch:8, spec:'ABV 4.5-6.2% · IBU 30-50',
+        q:'Dorada-ámbar, lupulada con notas cítricas y resinosas, equilibrada. Sierra Nevada es su icono.',
+        opts:['American Pale Ale','American IPA','Cream Ale','Amber Ale'], a:0,
+        exp:'American Pale Ale: el estilo que inició la revolución craft. Lúpulo americano (Cascade) en primer plano.' },
+      { t:'mc', q:'New England IPA se caracteriza por...',
+        opts:['Ser turbia, jugosa y con amargor percibido bajo','Ser muy clara y amarga','Ser oscura','Ser ácida'], a:0,
+        exp:'NEIPA (Hazy IPA): mucho dry hopping, turbidez por proteínas y polifenoles, y textura jugosa.' },
+      { t:'tf', q:'Una West Coast IPA suele ser más clara, seca y amarga que una NEIPA.', a:true,
+        exp:'Cierto. La West Coast es brillante, seca y agresivamente amarga; la NEIPA es turbia y suave.' },
+      { t:'mc', q:'¿Qué rango de ABV tiene una Double IPA?',
+        opts:['2-3%','4-5%','7.5-10%','15-20%'], a:2,
+        exp:'Double IPA (Imperial IPA): 7.5-10% ABV y 60-120 IBU. Mucho lúpulo y mucho alcohol.' },
+      { t:'mc', q:'¿Qué lúpulo es el clásico de la American Pale Ale, con notas a pomelo?',
+        opts:['Cascade','Saaz','Hallertau','Fuggles'], a:0,
+        exp:'Cascade, desarrollado en Oregón, definió el perfil cítrico y floral de la craft americana.' }
+    ]},
+    { id:'u5l2', title:'Oscuras americanas', icon:'🌰', qs:[
+      { t:'mc', q:'American Brown Ale es...',
+        opts:['Maltosa, con chocolate y nuez, con lúpulo americano','Muy pálida','Ácida','De trigo'], a:0,
+        exp:'Más lupulada y con más cuerpo que su prima inglesa, pero igualmente maltosa.' },
+      { t:'mc', q:'American Stout se diferencia de una Irish Stout en que...',
+        opts:['Es más fuerte, más lupulada y con más cuerpo','Es más ligera','No tiene tostado','Lleva lactosa'], a:0,
+        exp:'La American Stout sube el ABV, el lúpulo y la intensidad del tostado.' },
+      { t:'mc', q:'Imperial Stout tiene un ABV de...',
+        opts:['8-12%','3-4%','5-6%','20-25%'], a:0,
+        exp:'8-12% ABV y 50-90 IBU. Nació en el siglo XVIII para exportar a la corte rusa.' },
+      { t:'tf', q:'La Cream Ale es un híbrido: se fermenta como ale pero con carácter limpio de lager.', a:true,
+        exp:'Cierto. Es una ale americana con maíz o arroz, fermentada limpia y a veces madurada en frío.' },
+      { t:'mc', q:'California Common (Steam Beer) se elabora con...',
+        opts:['Levadura lager a temperatura de ale','Levadura de trigo','Brettanomyces','Levadura de vino'], a:0,
+        exp:'Es el estilo híbrido clásico de San Francisco. Anchor Steam es la referencia.' }
+    ]},
+    { id:'u5l3', title:'Amber y Brown Ales', icon:'🟤', qs:[
+      { t:'mc', q:'American Amber Ale es...',
+        opts:['Una ale ámbar, maltosa, con caramelo y un amargor lupulado equilibrado','Una lager pálida','Una sour','Una stout'], a:0,
+        exp:'Es un estilo puente entre la pale ale y la brown ale, con más carácter maltoso.' },
+      { t:'tf', q:'La American Brown Ale es más lupulada que la English Brown Ale.', a:true,
+        exp:'Cierto. La versión americana eleva el amargor y el aroma a lúpulo, manteniendo la maltosidad.' },
+      { t:'mc', q:'¿Qué estilo americano es una ale rojiza, maltosa y con un final seco y lupulado?',
+        opts:['American Amber Ale','American Pale Ale','American Brown Ale','Cream Ale'], a:0,
+        exp:'American Amber Ale: color entre ámbar y cobrizo, con caramelo y un amargor presente pero equilibrado.' },
+      { t:'mc', q:'La American Wheat Beer se diferencia de la Hefeweizen alemana en que...',
+        opts:['Es más limpia, con menos ésteres de plátano y clavo, y más lupulada','Es más oscura','Es ácida','Es sin gluten'], a:0,
+        exp:'La versión americana usa levadura limpia y lúpulos cítricos, resultando más refrescante y menos especiada.' },
+      { t:'tf', q:'La American Lager es más lupulada y con más cuerpo que la American Light Lager.', a:true,
+        exp:'Cierto. La American Lager estándar tiene más sabor y cuerpo que la versión "light".' }
+    ]}
+  ]
+},
+/* ================== UNIDAD 6 ================== */
+{
+  id:'u6', title:'Ácidas y salvajes', sub:'Funk, bacterias y madera', emoji:'🦠',
+  color:'#ff8fab', dark:'#d96a86',
+  lessons:[
+    { id:'u6l1', title:'Sour Ales europeas', icon:'🍋', qs:[
+      { t:'mc', q:'Berliner Weisse se caracteriza por...',
+        opts:['Ser ácida, de trigo, ligera y muy refrescante','Ser muy amarga','Ser oscura','Ser salada'], a:0,
+        exp:'Berliner Weisse: 2.8-3.8% ABV, acidez láctica limpia y carbonatación altísima.' },
+      { t:'mc', q:'Gose se diferencia de Berliner Weisse por...',
+        opts:['Llevar sal y cilantro','Ser más oscura','Ser más amarga','No ser ácida'], a:0,
+        exp:'Gose: cerveza de Leipzig con sal, cilantro y una acidez láctica suave.' },
+      { t:'tf', q:'La Flanders Red Ale se envejece en madera y desarrolla una acidez compleja con notas a cereza.', a:true,
+        exp:'Cierto. La madera y las bacterias lácticas y acéticas crean ese perfil único.' },
+      { t:'mc', q:'Oud Bruin es...',
+        opts:['Una ale belga oscura y ácida, con notas a frutas y caramelo','Una lager negra','Una IPA','Una stout'], a:0,
+        exp:'Oud Bruin ("viejo marrón") es la versión flamenca oscura de las ácidas belgas.' },
+      { t:'tf', q:'La American Wild Ale puede fermentar con Brettanomyces, que aporta notas de cuero, establo y frutas tropicales.', a:true,
+        exp:'Cierto. Brettanomyces es la levadura estrella de las cervezas "salvajes".' }
+    ]},
+    { id:'u6l2', title:'Lambic y gueuze', icon:'🍇', qs:[
+      { t:'mc', q:'Lambic se fermenta...',
+        opts:['Espontáneamente con microbiota del ambiente','Con levadura lager','Con levadura de vino','Con bacterias añadidas'], a:0,
+        exp:'Se enfría en cubas abiertas (coolship) y fermenta con la microbiota del valle del Zenne.' },
+      { t:'mc', q:'Gueuze es...',
+        opts:['Una mezcla de lambics de distintos años','Una IPA belga','Una stout','Una lager'], a:0,
+        exp:'Gueuze es un blend de lambics jóvenes y viejos que refermenta en botella.' },
+      { t:'tf', q:'Fruit Lambic se elabora añadiendo fruta a un lambic joven antes de su maduración.', a:true,
+        exp:'Cierto. Las cerezas (Kriek) y las frambuesas (Framboise) son las frutas más tradicionales.' },
+      { t:'mc', q:'¿Qué estilo belga es una lambic joven, turbia y muy ácida?',
+        opts:['Jonge Lambic','Oude Gueuze','Kriek','Faro'], a:0,
+        exp:'Jonge Lambic es un lambic de 1 año, sin mezclar, con acidez alta y sin carbonatación.' },
+      { t:'tf', q:'Faro es un lambic endulzado con azúcar o caramelo.', a:true,
+        exp:'Cierto. Faro es la versión dulce del lambic, históricamente popular en Bruselas.' }
+    ]}
+  ]
+},
+/* ================== UNIDAD 7 ================== */
+{
+  id:'u7', title:'Especiales y experimentales', sub:'Frutas, especias y madera', emoji:'🧪',
+  color:'#ffb703', dark:'#e09b00',
+  lessons:[
+    { id:'u7l1', title:'Cervezas con frutas', icon:'🍓', qs:[
+      { t:'mc', q:'Una Fruit Beer se define por...',
+        opts:['El carácter de la fruta añadida sobre una cerveza base','Ser siempre ácida','Ser sin alcohol','Ser de trigo'], a:0,
+        exp:'El BJCP pide describir la cerveza base Y la fruta: ambas deben ser perceptibles y armonizar.' },
+      { t:'mc', q:'¿Qué fruta es tradicional en una Kriek belga?',
+        opts:['Cereza','Frambuesa','Fresa','Arándano'], a:0,
+        exp:'Kriek se elabora con cerezas ácidas (Schaarbeek) sobre lambic.' },
+      { t:'tf', q:'Una Fruit Beer puede elaborarse sobre cualquier estilo base, desde una Blonde Ale hasta una Stout.', a:true,
+        exp:'Cierto. El BJCP permite frutas en prácticamente cualquier estilo, siempre que la base y la fruta se integren bien.' },
+      { t:'mc', q:'Una Grape Ale se caracteriza por...',
+        opts:['Usar uvas o mosto de uva en su elaboración','Ser sin alcohol','Ser muy amarga','Ser de trigo'], a:0,
+        exp:'Grape Ale es una categoría nueva en el BJCP 2021, que reconoce el uso de uvas en la cerveza.' },
+      { t:'tf', q:'En una Fruit Beer, la fruta debe dominar completamente el perfil de la cerveza base.', a:false,
+        exp:'Falso. Ambas deben ser perceptibles: la base aporta estructura y la fruta añade carácter.' }
+    ]},
+    { id:'u7l2', title:'Especiadas y de madera', icon:'🪵', qs:[
+      { t:'mc', q:'Una Spiced Beer se define por...',
+        opts:['Llevar especias o hierbas añadidas','Ser siempre ácida','Ser sin alcohol','Ser de trigo'], a:0,
+        exp:'Las especias pueden ser tradicionales (cilantro, naranja) o experimentales (canela, jengibre, chile).' },
+      { t:'tf', q:'Una Wood-Aged Beer puede aportar notas de vainilla, roble y tostado.', a:true,
+        exp:'Cierto. La madera cede vainilla y tostado; si la barrica fue de bourbon, también caramelo y alcohol.' },
+      { t:'mc', q:'Una Smoked Beer se caracteriza por...',
+        opts:['Usar malta ahumada','Llevar fruta','Ser sin gluten','Ser muy amarga'], a:0,
+        exp:'El ahumado puede venir de maltas ahumadas con turba, haya o madera.' },
+      { t:'mc', q:'¿Qué estilo alemán es famoso por su intenso aroma ahumado a bacon?',
+        opts:['Rauchbier','Berliner Weisse','Gose','Kölsch'], a:0,
+        exp:'Rauchbier de Bamberg: las maltas se secan sobre fuego de madera de haya.' },
+      { t:'tf', q:'La Specialty Beer del BJCP permite describir cervezas con ingredientes o procesos no tradicionales.', a:true,
+        exp:'Cierto. Es una categoría abierta para experimentos: especias, azúcares, frutas, técnicas novedosas.' }
+    ]}
+  ]
+},
+/* ================== UNIDAD 8 ================== */
+{
+  id:'u8', title:'Cervezas históricas y fuertes', sub:'De la tradición a la potencia', emoji:'🏰',
+  color:'#8b5cf6', dark:'#6d3fd4',
+  lessons:[
+    { id:'u8l1', title:'Cervezas históricas', icon:'📜', qs:[
+      { t:'mc', q:'Pre-Prohibition Lager es...',
+        opts:['Una lager americana histórica, más lupulada y con más cuerpo que las actuales','Una ale belga','Una sour','Una stout'], a:0,
+        exp:'Se elaboraba antes de la Ley Seca, con más malta y lúpulo que las lager industriales posteriores.' },
+      { t:'tf', q:'Kellerbier es una lager alemana sin filtrar, turbia y con carbonatación natural.', a:true,
+        exp:'Cierto. "Keller" significa bodega: se servía directamente del barril, sin filtrar ni pasteurizar.' },
+      { t:'mc', q:'¿Qué estilo histórico se elabora con malta de centeno?',
+        opts:['Roggenbier','Kölsch','Altbier','Berliner Weisse'], a:0,
+        exp:'Roggenbier es una ale bávara de centeno, con un carácter especiado y terroso.' },
+      { t:'mc', q:'Grodziskie es...',
+        opts:['Una cerveza polaca de trigo ahumado, ligera y muy carbonatada','Una stout rusa','Una IPA belga','Una sour alemana'], a:0,
+        exp:'Grodziskie (Grätzer) es un estilo histórico polaco, con trigo ahumado y un perfil único.' },
+      { t:'tf', q:'La Historical Beer del BJCP incluye estilos que ya no se producen comercialmente o son muy raros.', a:true,
+        exp:'Cierto. Es una categoría para preservar estilos que casi desaparecieron.' }
+    ]},
+    { id:'u8l2', title:'Cervezas fuertes', icon:'💪', qs:[
+      { t:'mc', q:'American Barleywine se caracteriza por...',
+        opts:['Ser muy fuerte, lupulada y con mucho cuerpo','Ser ligera y refrescante','Ser ácida','Ser de trigo'], a:0,
+        exp:'American Barleywine: 8-12% ABV, muy lupulada, con un final amargo y alcohólico.' },
+      { t:'mc', q:'Imperial Stout tiene un ABV de...',
+        opts:['8-12%','3-4%','5-6%','20-25%'], a:0,
+        exp:'8-12% ABV y 50-90 IBU. Nació en el siglo XVIII para exportar a la corte rusa.' },
+      { t:'tf', q:'La Wheatwine es una versión fuerte de la American Wheat Beer, con 8-12% ABV.', a:true,
+        exp:'Cierto. La Wheatwine combina el trigo con una alta graduación y mucho cuerpo.' },
+      { t:'mc', q:'¿Qué estilo belga es una ale dorada, muy fuerte y con ésteres frutales?',
+        opts:['Belgian Strong Golden Ale','Dubbel','Witbier','Saison'], a:0,
+        exp:'Belgian Strong Golden Ale: 7.5-10% ABV, como Duvel o Delirium Tremens.' },
+      { t:'tf', q:'La Baltic Porter es una porter fuerte de tradición báltica, a menudo fermentada con levadura lager.', a:true,
+        exp:'Cierto. Es una versión más fuerte y limpia de la porter inglesa, popular en los países bálticos.' }
+    ]}
+  ]
+}
+];
+
+/* =========================================================
+   ESTADO Y PERSISTENCIA
+   ========================================================= */
+const SAVE_KEY = 'beerquest_v2';
+let state = { xp:0, coins:0, streak:0, sound:true, completed:{}, tipIndex:0 };
+
+function load(){
+  try{
+    const raw = localStorage.getItem(SAVE_KEY);
+    if(raw) state = Object.assign(state, JSON.parse(raw));
+  }catch(e){}
+}
+function save(){
+  try{ localStorage.setItem(SAVE_KEY, JSON.stringify(state)); }catch(e){}
+}
+
+/* Lista plana de lecciones para el desbloqueo lineal */
+const FLAT = [];
+UNITS.forEach(u => u.lessons.forEach(l => FLAT.push({unitId:u.id, lesson:l})));
+
+function isUnlocked(lessonId){
+  const idx = FLAT.findIndex(f => f.lesson.id === lessonId);
+  if(idx <= 0) return true;
+  return !!state.completed[FLAT[idx-1].lesson.id];
+}
+
+/* =========================================================
+   AUDIO
+   ========================================================= */
+let actx = null;
+function ac(){
+  if(!actx){
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    if(!Ctx) return null;
+    actx = new Ctx();
+  }
+  if(actx.state === 'suspended') actx.resume();
+  return actx;
+}
+function tone(freq, start, dur, type, gain){
+  if(!state.sound) return;
+  const ctx = ac(); if(!ctx) return;
+  type = type || 'sine'; gain = gain === undefined ? 0.07 : gain;
+  const o = ctx.createOscillator(), g = ctx.createGain();
+  o.type = type; o.frequency.value = freq;
+  const t0 = ctx.currentTime + start;
+  g.gain.setValueAtTime(0.0001, t0);
+  g.gain.linearRampToValueAtTime(gain, t0 + 0.015);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+  o.connect(g); g.connect(ctx.destination);
+  o.start(t0); o.stop(t0 + dur + 0.05);
+}
+const sfx = {
+  tap(){ tone(420, 0, 0.05, 'square', 0.025); },
+  correct(){ tone(659,0,0.12); tone(880,0.08,0.20); },
+  wrong(){ tone(200,0,0.22,'sawtooth',0.05); tone(150,0.10,0.28,'sawtooth',0.045); },
+  win(){ [523,659,784,1047].forEach((f,i)=>tone(f, i*0.11, 0.32, 'sine', 0.075)); },
+  fail(){ [392,330,262].forEach((f,i)=>tone(f, i*0.14, 0.35, 'triangle', 0.06)); }
+};
+
+/* =========================================================
+   HELPERS
+   ========================================================= */
+const $ = id => document.getElementById(id);
+function showScreen(name){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  $('screen-' + name).classList.add('active');
+  window.scrollTo({top:0, behavior:'instant' in window ? 'instant' : 'auto'});
+}
+let toastTimer;
+function toast(msg){
+  const t = $('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 2000);
+}
+function shuffleArr(a){
+  for(let i=a.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+function prepare(q){
+  const base = { q:q.q, exp:q.exp, swatch:q.swatch, spec:q.spec };
+  if(q.t === 'tf'){
+    return Object.assign(base, { opts:['Verdadero','Falso'], answer: q.a ? 0 : 1 });
+  }
+  const order = q.opts.map((_,i)=>i);
+  shuffleArr(order);
+  return Object.assign(base, {
+    opts: order.map(i => q.opts[i]),
+    answer: order.indexOf(q.a)
+  });
+}
+function randomTip(){
+  return CONSEJOS[Math.floor(Math.random() * CONSEJOS.length)];
+}
+
+/* =========================================================
+   PANTALLA PRINCIPAL
+   ========================================================= */
+function renderHome(){
+  const totalLessons = FLAT.length;
+  const doneLessons = FLAT.filter(f => state.completed[f.lesson.id]).length;
+  const totalStars = Object.values(state.completed).reduce((a,b)=>a+b,0);
+
+  $('hStreak').textContent = state.streak;
+  $('hXp').textContent = state.xp;
+  $('hCoins').textContent = state.coins;
+  $('hStars').textContent = totalStars;
+  $('heroBar').style.width = Math.round(doneLessons/totalLessons*100) + '%';
+  $('heroSub').textContent = doneLessons + ' de ' + totalLessons + ' lecciones completadas';
+
+  // Consejo rotativo en la tarjeta del consultor
+  $('homeTip').textContent = randomTip();
+
+  const wrap = $('unitsList');
+  wrap.innerHTML = '';
+
+  UNITS.forEach(unit => {
+    const done = unit.lessons.filter(l => state.completed[l.id]).length;
+    const card = document.createElement('div');
+    card.className = 'unit';
+
+    const head = document.createElement('div');
+    head.className = 'unit-head';
+    head.style.background = unit.color;
+    head.style.boxShadow = '0 5px 0 ' + unit.dark;
+    head.innerHTML =
+      '<div class="unit-emoji">' + unit.emoji + '</div>' +
+      '<div><div class="unit-title">' + unit.title + '</div>' +
+      '<div class="unit-sub">' + unit.sub + ' · ' + done + '/' + unit.lessons.length + '</div></div>';
+    card.appendChild(head);
+
+    const path = document.createElement('div');
+    path.className = 'unit-path';
+
+    const offsets = [0, 46, -46, 46, -46, 0, 46, -46];
+    unit.lessons.forEach((lesson, li) => {
+      const unlocked = isUnlocked(lesson.id);
+      const stars = state.completed[lesson.id] || 0;
+      const isNext = unlocked && !stars;
+
+      const row = document.createElement('div');
+      row.className = 'node-row';
+      row.style.transform = 'translateX(' + offsets[li % offsets.length] + 'px)';
+
+      const btn = document.createElement('button');
+      btn.className = 'node' + (unlocked ? '' : ' locked') + (stars ? ' done' : '') + (isNext ? ' pulse' : '');
+      btn.style.setProperty('--c', unit.color);
+      btn.style.setProperty('--cd', unit.dark);
+      btn.textContent = !unlocked ? '🔒' : (stars ? (stars >= 2 ? '⭐' : '✓') : lesson.icon);
+      btn.addEventListener('click', () => {
+        if(!unlocked){ toast('Completa la lección anterior primero 🔒'); sfx.wrong(); return; }
+        sfx.tap();
+        startLesson(unit, lesson);
+      });
+
+      const label = document.createElement('div');
+      label.className = 'node-label';
+      label.textContent = lesson.title;
+
+      row.appendChild(btn);
+      row.appendChild(label);
+      path.appendChild(row);
+    });
+
+    card.appendChild(path);
+    wrap.appendChild(card);
+  });
+}
+
+/* =========================================================
+   MOTOR DE LECCIÓN
+   ========================================================= */
+let session = null;
+
+function startLesson(unit, lesson){
+  session = {
+    unit: unit,
+    lesson: lesson,
+    queue: lesson.qs.map(prepare),
+    index: 0,
+    correct: 0,
+    wrong: 0,
+    hearts: 5,
+    streak: 0,
+    maxStreak: 0,
+    answered: false,
+    finished: false
+  };
+  $('feedback').classList.remove('show');
+  showScreen('lesson');
+  renderQuestion();
+}
+
+function updateHearts(){
+  const row = $('heartsRow');
+  let html = '';
+  for(let i = 0; i < 5; i++){
+    html += (i < session.hearts) ? '<span>❤️</span>' : '<span style="filter:grayscale(1);opacity:.3">❤️</span>';
+  }
+  row.innerHTML = html;
+}
+
+function renderQuestion(){
+  const q = session.queue[session.index];
+  session.answered = false;
+
+  const area = $('questionArea');
+  area.innerHTML = '';
+
+  if(q.swatch !== undefined){
+    const sw = document.createElement('div');
+    sw.className = 'beer-swatch';
+    sw.style.background = srmToHex(q.swatch);
+    area.appendChild(sw);
+  }
+
+  const h = document.createElement('h2');
+  h.className = 'prompt';
+  h.textContent = q.q;
+  area.appendChild(h);
+
+  if(q.spec){
+    const sp = document.createElement('div');
+    sp.className = 'spec';
+    sp.textContent = q.spec;
+    area.appendChild(sp);
+  }
+
+  const choices = document.createElement('div');
+  choices.className = 'choices';
+
+  q.opts.forEach((opt, i) => {
+    const b = document.createElement('button');
+    b.className = 'choice';
+    b.innerHTML = '<span class="idx">' + (i + 1) + '</span><span>' + opt + '</span>';
+    b.addEventListener('click', () => answer(i, b));
+    choices.appendChild(b);
+  });
+  area.appendChild(choices);
+
+  $('progressBar').style.width = (session.index / session.queue.length * 100) + '%';
+  updateHearts();
+}
+
+function answer(choice, btn){
+  if(session.answered) return;
+  session.answered = true;
+
+  const q = session.queue[session.index];
+  const isCorrect = choice === q.answer;
+  const buttons = document.querySelectorAll('#questionArea .choice');
+
+  buttons.forEach((b, i) => {
+    b.classList.add('dis');
+    if(i === q.answer) b.classList.add('correct');
+    else if(i === choice) b.classList.add('wrong');
+  });
+
+  const fb = $('feedback');
+  fb.classList.remove('ok', 'bad');
+
+  if(isCorrect){
+    session.correct++;
+    session.streak++;
+    session.maxStreak = Math.max(session.maxStreak, session.streak);
+    fb.classList.add('ok');
+    $('fbIcon').textContent = '✓';
+    $('fbTitle').textContent = session.streak >= 3
+      ? '¡Correcto! 🔥 Racha x' + session.streak
+      : '¡Correcto!';
+    sfx.correct();
+  } else {
+    session.wrong++;
+    session.streak = 0;
+    session.hearts = Math.max(0, session.hearts - 1);
+    fb.classList.add('bad');
+    $('fbIcon').textContent = '✕';
+    $('fbTitle').textContent = '¡Uy! No era esa';
+    sfx.wrong();
+  }
+
+  $('fbText').textContent = q.exp;
+  updateHearts();
+
+  $('btnContinue').textContent = (session.hearts === 0) ? 'VER RESULTADO' : 'CONTINUAR';
+  fb.classList.add('show');
+}
+
+function nextStep(){
+  $('feedback').classList.remove('show');
+
+  if(session.hearts === 0){
+    finishLesson(true);
+    return;
+  }
+  session.index++;
+  if(session.index >= session.queue.length){
+    finishLesson(false);
+    return;
+  }
+  setTimeout(renderQuestion, 180);
+}
+
+/* =========================================================
+   FIN DE LECCIÓN — PUNTOS Y MONEDAS
+   ========================================================= */
+function finishLesson(failed){
+  const total = session.queue.length;
+  const answeredCount = session.correct + session.wrong;
+  const accuracy = answeredCount ? session.correct / answeredCount : 0;
+  const lessonId = session.lesson.id;
+
+  let stars = 0;
+  let xp = 0;
+  let coins = 0;
+
+  if(!failed){
+    stars = accuracy >= 0.9 ? 3 : accuracy >= 0.7 ? 2 : 1;
+    // XP: 12 por acierto + bonus por perfección + bonus por racha máxima
+    xp = session.correct * 12 + (accuracy === 1 ? 25 : 0) + (session.maxStreak >= 4 ? 15 : 0);
+    // Monedas: 3 por acierto + bonus por 3 estrellas
+    coins = session.correct * 3 + (stars === 3 ? 10 : 0);
+
+    const prev = state.completed[lessonId] || 0;
+    state.completed[lessonId] = Math.max(prev, stars);
+    state.streak = (state.streak || 0) + 1;
+  } else {
+    // Incluso al fallar se gana algo de XP y monedas para no desmotivar
+    xp = session.correct * 6;
+    coins = session.correct * 1;
+    state.streak = 0;
+  }
+
+  state.xp += xp;
+  state.coins += coins;
+  save();
+
+  // Resultado
+  $('resEmoji').textContent = failed ? '😵' : (accuracy === 1 ? '🏆' : '🎉');
+  $('resTitle').textContent = failed ? '¡Te quedaste sin vidas!' : '¡Lección completada!';
+  $('resSub').textContent = failed
+    ? 'Repasa y vuelve a intentarlo. ¡Nadie nace siendo juez!'
+    : (accuracy === 1 ? '¡Perfecto! Dominas este estilo.' : 'Buen trabajo. ¡Sigue así!');
+
+  const starBox = $('resStars');
+  if(failed){
+    starBox.innerHTML = '<span>💔</span>';
+  } else {
+    starBox.innerHTML = [0,1,2].map(i =>
+      '<span style="animation-delay:' + (i * 0.15) + 's">' + (i < stars ? '⭐' : '☆') + '</span>'
+    ).join('');
+  }
+
+  $('resXp').textContent = '+' + xp;
+  $('resCoins').textContent = '+' + coins;
+  $('resAcc').textContent = Math.round(accuracy * 100) + '%';
+  $('resultTip').textContent = randomTip();
+
+  showScreen('result');
+
+  if(failed){
+    sfx.fail();
+  } else {
+    sfx.win();
+    confetti();
+  }
+  renderHome();
+}
+
+function confetti(){
+  const emojis = ['🍺','🎉','⭐','🍻','✨','🏅','🪙'];
+  for(let i = 0; i < 34; i++){
+    const el = document.createElement('div');
+    el.className = 'confetti';
+    el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    el.style.left = (Math.random() * 100) + 'vw';
+    el.style.fontSize = (16 + Math.random() * 22) + 'px';
+    el.style.animationDelay = (Math.random() * 0.9) + 's';
+    el.style.animationDuration = (2.2 + Math.random() * 1.2) + 's';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 4200);
+  }
+}
+
+/* =========================================================
+   EVENTOS
+   ========================================================= */
+$('btnContinue').addEventListener('click', nextStep);
+
+$('btnClose').addEventListener('click', () => {
+  sfx.tap();
+  $('feedback').classList.remove('show');
+  session = null;
+  showScreen('home');
+  renderHome();
+});
+
+$('btnResCont').addEventListener('click', () => {
+  sfx.tap();
+  session = null;
+  showScreen('home');
+  renderHome();
+});
+
+// Atajos de teclado 1-4 y Enter
+document.addEventListener('keydown', e => {
+  if($('screen-lesson').classList.contains('active')){
+    if(e.key >= '1' && e.key <= '4'){
+      const btns = document.querySelectorAll('#questionArea .choice');
+      const i = parseInt(e.key) - 1;
+      if(btns[i] && !session.answered) btns[i].click();
+    }
+    if(e.key === 'Enter' && $('feedback').classList.contains('show')){
+      nextStep();
+    }
+    if(e.key === 'Escape'){
+      $('btnClose').click();
+    }
+  }
+});
+
+/* =========================================================
+   INICIO
+   ========================================================= */
+load();
+renderHome();
+
+// Desbloquear audio en el primer toque
+document.addEventListener('pointerdown', function unlock(){
+  ac();
+  document.removeEventListener('pointerdown', unlock);
+}, { once:true });
+</script>
+</body>
+</html>
