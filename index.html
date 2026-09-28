@@ -13,40 +13,40 @@
   --blue:#1cb0f6; --blue-d:#0f8fc7;
   --gold:#ffc800; --gold-d:#d9a400;
   --purple:#ce82ff; --purple-d:#a568cc;
-  --ink:#3c3c3c; --ink-l:#777; --line:#e5e5e5; --bg:#fffdf8;
+  --ink:#3c3c3c; --ink-l:#777; --line:#e5e5e5; --bg:#fffdf8; --card:#fff;
+}
+body.dark{
+  --ink:#e8e8e8; --ink-l:#9a9a9a; --line:#3a3a3a; --bg:#161616; --card:#222;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%}
 body{
   margin:0;font-family:'Nunito',system-ui,-apple-system,sans-serif;
   background:var(--bg);color:var(--ink);overflow-x:hidden;
-  display:flex;justify-content:center;
+  display:flex;justify-content:center;transition:background .3s,color .3s;
 }
 #app{width:100%;max-width:540px;position:relative;min-height:100vh;padding:0 16px 140px}
 
-/* ---------- SCREENS ---------- */
 .screen{display:none;animation:fadeIn .25s ease}
 .screen.active{display:block}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
-/* ---------- TOPBAR ---------- */
 .topbar{
   position:sticky;top:0;z-index:50;display:flex;gap:8px;justify-content:space-between;
   padding:14px 0 10px;background:linear-gradient(var(--bg) 70%,transparent);
 }
 .stat{
-  font-weight:900;font-size:15px;display:flex;align-items:center;gap:6px;
-  background:#fff;border:2px solid var(--line);border-bottom-width:4px;
-  border-radius:14px;padding:6px 14px;color:var(--ink);
+  font-weight:900;font-size:14px;display:flex;align-items:center;gap:5px;
+  background:var(--card);border:2px solid var(--line);border-bottom-width:4px;
+  border-radius:14px;padding:6px 12px;color:var(--ink);
 }
 .stat.streak{color:#ff7a00}
 .stat.xp{color:#c78a00}
 .stat.coins{color:#b8860b}
 
-/* ---------- HERO + CONSULTOR ---------- */
 .hero{
   background:linear-gradient(140deg,#ffb703,#fb8500);
-  border-radius:24px;padding:22px 20px;color:#fff;margin-bottom:18px;
+  border-radius:24px;padding:22px 20px;color:#fff;margin-bottom:14px;
   box-shadow:0 6px 0 #d97706;
 }
 .hero h1{margin:0 0 6px;font-size:26px;font-weight:900;letter-spacing:-.5px}
@@ -55,9 +55,33 @@ body{
 .hero-bar span{display:block;height:100%;background:#fff;border-radius:99px;transition:width .6s cubic-bezier(.2,.8,.2,1)}
 .hero-sub{margin-top:8px;font-size:12px;font-weight:800;opacity:.9}
 
-/* Consultor José Guerrero */
+/* ==================== QUICK NAV ==================== */
+.quick-nav{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px;
+}
+.qnav{
+  background:var(--card);border:2px solid var(--line);border-bottom-width:4px;
+  border-radius:16px;padding:10px 4px;text-align:center;cursor:pointer;
+  font-family:inherit;color:var(--ink);transition:transform .08s,background .15s;
+}
+.qnav:hover{background:#fafafa}
+body.dark .qnav:hover{background:#2a2a2a}
+.qnav:active{transform:translateY(2px)}
+.qnav-icon{font-size:22px;display:block;line-height:1}
+.qnav-label{font-size:10.5px;font-weight:900;margin-top:5px;text-transform:uppercase;letter-spacing:.3px;color:var(--ink-l)}
+.qnav .badge{
+  position:relative;display:inline-block;
+}
+.qnav .badge::after{
+  content:attr(data-badge);position:absolute;top:-4px;right:-10px;
+  background:var(--red);color:#fff;font-size:9px;font-weight:900;
+  min-width:16px;height:16px;border-radius:99px;display:flex;align-items:center;justify-content:center;
+  padding:0 4px;border:2px solid var(--bg);
+}
+
+/* ==================== CONSULTOR ==================== */
 .consultor-card{
-  display:flex;gap:14px;align-items:center;background:#fff;
+  display:flex;gap:14px;align-items:center;background:var(--card);
   border:2px solid var(--line);border-bottom-width:5px;border-radius:20px;
   padding:14px 16px;margin-bottom:22px;
 }
@@ -69,12 +93,13 @@ body{
 .consultor-name{font-weight:900;font-size:15px;margin:0}
 .consultor-role{font-size:12px;font-weight:700;color:var(--ink-l);margin:1px 0 6px}
 .consultor-tip{
-  font-size:13px;font-weight:700;color:#4a4a4a;line-height:1.35;margin:0;
+  font-size:13px;font-weight:700;color:var(--ink);line-height:1.35;margin:0;
   background:#fff8e1;border-radius:10px;padding:8px 10px;
 }
+body.dark .consultor-tip{background:#3a3016;color:#f4e5b0}
 .consultor-tip::before{content:'💡 ';font-size:14px}
 
-/* ---------- UNITS ---------- */
+/* ==================== UNITS ==================== */
 .unit{margin-bottom:30px}
 .unit-head{
   display:flex;align-items:center;gap:14px;border-radius:20px;padding:16px 18px;color:#fff;
@@ -92,12 +117,13 @@ body{
 }
 .node:active:not(.locked){transform:translateY(6px);box-shadow:0 0 0 var(--cd)}
 .node.locked{background:#e5e5e5;box-shadow:0 6px 0 #cfcfcf;color:#a5a5a5;cursor:not-allowed;font-size:24px}
+body.dark .node.locked{background:#3a3a3a;color:#666;box-shadow:0 6px 0 #2a2a2a}
 .node.done{background:var(--gold);box-shadow:0 6px 0 var(--gold-d)}
 .node.pulse{animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{box-shadow:0 6px 0 var(--cd),0 0 0 0 rgba(88,204,2,.5)}50%{box-shadow:0 6px 0 var(--cd),0 0 0 12px rgba(88,204,2,0)}}
 .node-label{font-size:12px;font-weight:800;color:var(--ink-l);max-width:150px;text-align:center;line-height:1.25}
 
-/* ---------- LESSON ---------- */
+/* ==================== LESSON ==================== */
 .lesson-bar{
   position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;
   padding:14px 0 12px;background:linear-gradient(var(--bg) 75%,transparent);
@@ -108,8 +134,26 @@ body{
 }
 .icon-btn:hover{color:var(--ink)}
 .progress-track{flex:1;height:16px;background:#e5e5e5;border-radius:99px;overflow:hidden}
+body.dark .progress-track{background:#2a2a2a}
 .progress-fill{height:100%;width:0;border-radius:99px;background:var(--green);transition:width .35s cubic-bezier(.2,.8,.2,1)}
 .hearts-row{display:flex;gap:2px;font-size:16px;min-width:78px;justify-content:flex-end}
+
+/* Power-ups */
+.powerup-bar{
+  display:flex;gap:8px;justify-content:center;padding:8px 0 4px;
+}
+.powerup-btn{
+  background:var(--card);border:2px solid var(--line);border-bottom-width:4px;
+  border-radius:12px;padding:8px 12px;font-family:inherit;font-weight:900;
+  font-size:12px;color:var(--ink);cursor:pointer;display:flex;align-items:center;gap:5px;
+  transition:transform .08s;
+}
+.powerup-btn:active:not(.dis){transform:translateY(2px)}
+.powerup-btn.dis{opacity:.35;cursor:not-allowed}
+.powerup-btn .count{
+  background:var(--blue);color:#fff;font-size:10px;border-radius:99px;
+  padding:1px 7px;min-width:18px;text-align:center;
+}
 
 .question-area{padding-top:8px}
 .beer-swatch{
@@ -126,30 +170,34 @@ body{
   display:inline-block;font-size:12px;font-weight:800;color:#9a6a00;background:#fff3d1;
   border-radius:10px;padding:5px 12px;margin-bottom:16px;
 }
+body.dark .spec{background:#3a3016;color:#f4e5b0}
 .choices{display:flex;flex-direction:column;gap:12px;margin-top:14px}
 .choice{
   display:flex;align-items:center;gap:12px;width:100%;text-align:left;font-family:inherit;
-  background:#fff;border:2px solid var(--line);border-bottom-width:5px;border-radius:16px;
+  background:var(--card);border:2px solid var(--line);border-bottom-width:5px;border-radius:16px;
   padding:15px 16px;font-size:15.5px;font-weight:800;color:var(--ink);cursor:pointer;
   transition:background .12s,border-color .12s,transform .08s;
 }
-.choice:hover:not(.dis){border-color:#cfcfcf;background:#fafafa}
+.choice:hover:not(.dis){border-color:#cfcfcf}
 .choice:active:not(.dis){transform:translateY(3px);border-bottom-width:2px}
 .choice .idx{
   min-width:26px;height:26px;border-radius:8px;background:#f1f1f1;color:#9a9a9a;
   font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;flex:none;
 }
+body.dark .choice .idx{background:#333;color:#888}
 .choice.correct{background:var(--green-l);border-color:var(--green);color:#3a7a00}
 .choice.correct .idx{background:var(--green);color:#fff}
 .choice.wrong{background:var(--red-l);border-color:var(--red);color:#c62828}
 .choice.wrong .idx{background:var(--red);color:#fff}
-.choice.dis{cursor:default}
+.choice.dis{opacity:.55;cursor:default}
+.choice.correct.dis{opacity:1}
+.choice.wrong.dis{opacity:1}
+.choice.hidden-5050{opacity:.15;pointer-events:none}
 
-/* ---------- FEEDBACK ---------- */
+/* ==================== FEEDBACK ==================== */
 .feedback{
   position:fixed;left:0;right:0;bottom:0;z-index:200;
   transform:translateY(130%);transition:transform .28s cubic-bezier(.2,.9,.3,1.2);
-  padding:0 0 0;
 }
 .feedback.show{transform:translateY(0)}
 .fb-inner{max-width:540px;margin:0 auto;padding:20px 20px 26px;border-radius:22px 22px 0 0}
@@ -165,7 +213,9 @@ body{
 .feedback.ok #fbIcon{background:var(--green)}
 .feedback.bad #fbIcon{background:var(--red)}
 #fbText{margin:10px 0 18px;font-size:14.5px;font-weight:700;line-height:1.45;color:#4a4a4a}
+body.dark #fbText{color:#ddd}
 .feedback .btn{width:100%}
+
 .btn{
   font-family:inherit;font-weight:900;font-size:15px;letter-spacing:.6px;text-transform:uppercase;
   color:#fff;background:var(--green);border:none;border-radius:16px;padding:15px 20px;cursor:pointer;
@@ -176,8 +226,10 @@ body{
 .btn.blue:active{box-shadow:0 0 0 var(--blue-d)}
 .btn.gold{background:var(--gold);box-shadow:0 5px 0 var(--gold-d);color:#7a5a00}
 .btn.gold:active{box-shadow:0 0 0 var(--gold-d)}
+.btn.grey{background:#e5e5e5;color:#666;box-shadow:0 5px 0 #c8c8c8}
+.btn.grey:active{box-shadow:0 0 0 #c8c8c8}
 
-/* ---------- RESULT ---------- */
+/* ==================== RESULT ==================== */
 .result-inner{text-align:center;padding:50px 0 0;animation:pop .4s cubic-bezier(.2,.9,.3,1.3)}
 @keyframes pop{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
 .result-emoji{font-size:74px;line-height:1;animation:bounce 1s infinite alternate}
@@ -188,7 +240,7 @@ body{
 .stars span{display:inline-block;animation:pop .4s backwards}
 .result-stats{display:flex;gap:12px;justify-content:center;margin-bottom:22px;flex-wrap:wrap}
 .result-stats>div{
-  flex:1;max-width:130px;background:#fff;border:2px solid var(--line);border-bottom-width:5px;
+  flex:1;max-width:120px;background:var(--card);border:2px solid var(--line);border-bottom-width:5px;
   border-radius:18px;padding:14px 8px;
 }
 .result-stats span{display:block;font-size:24px;font-weight:900;color:var(--gold-d)}
@@ -196,33 +248,171 @@ body{
 .result-stats span.coin{color:#b8860b}
 .result-stats small{font-size:11.5px;font-weight:800;color:var(--ink-l);text-transform:uppercase;letter-spacing:.5px}
 
-/* consejo del consultor en resultado */
 .result-tip{
   background:#fff8e1;border:2px solid #ffe082;border-radius:16px;
   padding:12px 14px;margin:0 0 24px;text-align:left;display:flex;gap:10px;align-items:flex-start;
 }
+body.dark .result-tip{background:#3a3016;border-color:#5a4a1a}
 .result-tip img{width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);flex:none}
 .result-tip p{margin:0;font-size:13px;font-weight:700;color:#5a4a00;line-height:1.4}
+body.dark .result-tip p{color:#f4e5b0}
 .result-tip p b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:#9a7a00;margin-bottom:2px}
+body.dark .result-tip p b{color:#c8a840}
 #btnResCont{width:100%;max-width:340px}
 
-/* ---------- CONFETTI ---------- */
+/* ==================== SHOP / ACHIEVEMENTS / MISSIONS ==================== */
+.page-head{
+  display:flex;align-items:center;gap:12px;padding:14px 0 18px;
+}
+.page-head h2{font-size:22px;font-weight:900;margin:0;letter-spacing:-.4px}
+.page-head .sub{font-size:12.5px;font-weight:700;color:var(--ink-l);margin:0}
+
+.section-title{
+  font-size:12.5px;font-weight:900;text-transform:uppercase;letter-spacing:1px;
+  color:var(--ink-l);margin:24px 0 12px;
+}
+
+/* Shop grid */
+.shop-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.shop-item{
+  background:var(--card);border:2px solid var(--line);border-bottom-width:5px;
+  border-radius:16px;padding:14px 12px;text-align:center;position:relative;
+  transition:transform .1s;
+}
+.shop-item.owned{opacity:.65}
+.shop-item .si-icon{font-size:40px;line-height:1;margin-bottom:8px;display:block}
+.shop-item .si-name{font-weight:900;font-size:13.5px;margin-bottom:3px}
+.shop-item .si-desc{font-size:11.5px;font-weight:700;color:var(--ink-l);margin-bottom:10px;min-height:28px}
+.shop-item .si-price{
+  display:inline-flex;align-items:center;gap:5px;font-weight:900;font-size:13px;
+  background:var(--gold);color:#7a5a00;padding:7px 14px;border-radius:99px;
+  box-shadow:0 3px 0 var(--gold-d);cursor:pointer;border:none;font-family:inherit;
+}
+.shop-item .si-price:active{transform:translateY(3px);box-shadow:0 0 0 var(--gold-d)}
+.shop-item .si-price.dis{background:#e5e5e5;color:#999;box-shadow:0 3px 0 #c8c8c8;cursor:not-allowed}
+body.dark .shop-item .si-price.dis{background:#333;color:#666;box-shadow:0 3px 0 #222}
+.shop-item .si-owned{
+  display:inline-block;font-weight:900;font-size:12px;color:var(--green-d);
+  padding:7px 14px;
+}
+.shop-item .si-active{
+  background:var(--green);color:#fff;box-shadow:0 3px 0 var(--green-d);
+}
+.avatar-emoji{font-size:34px;line-height:1;margin-bottom:6px;display:block}
+
+/* Achievements */
+.ach-list{display:flex;flex-direction:column;gap:10px}
+.ach-item{
+  display:flex;gap:14px;align-items:center;background:var(--card);
+  border:2px solid var(--line);border-bottom-width:5px;border-radius:16px;padding:14px;
+  opacity:.45;
+}
+.ach-item.unlocked{opacity:1;border-color:var(--gold);border-bottom-color:var(--gold-d)}
+.ach-icon{font-size:34px;flex:none;line-height:1}
+.ach-info{flex:1;min-width:0}
+.ach-name{font-weight:900;font-size:14.5px}
+.ach-desc{font-size:12px;font-weight:700;color:var(--ink-l);margin-top:2px}
+.ach-check{font-size:22px;color:var(--green);flex:none}
+
+/* Missions */
+.mission-list{display:flex;flex-direction:column;gap:10px}
+.mission-item{
+  background:var(--card);border:2px solid var(--line);border-bottom-width:5px;
+  border-radius:16px;padding:14px 16px;display:flex;gap:12px;align-items:center;
+}
+.mission-item.done{border-color:var(--green);border-bottom-color:var(--green-d);background:var(--green-l)}
+body.dark .mission-item.done{background:#1e3a0a}
+.mission-icon{font-size:26px;flex:none}
+.mission-body{flex:1;min-width:0}
+.mission-name{font-weight:900;font-size:14px}
+.mission-prog{font-size:12px;font-weight:700;color:var(--ink-l);margin-top:2px}
+.mission-bar{height:8px;background:#e5e5e5;border-radius:99px;margin-top:8px;overflow:hidden}
+body.dark .mission-bar{background:#333}
+.mission-bar span{display:block;height:100%;background:var(--green);border-radius:99px;transition:width .4s}
+.mission-reward{
+  font-weight:900;font-size:12px;color:var(--gold-d);flex:none;
+  background:#fff8e1;padding:4px 9px;border-radius:99px;
+}
+body.dark .mission-reward{background:#3a3016}
+
+/* ==================== JUDGE MODE ==================== */
+.judge-cases{display:flex;flex-direction:column;gap:12px}
+.judge-case{
+  background:var(--card);border:2px solid var(--line);border-bottom-width:5px;
+  border-radius:16px;padding:16px;cursor:pointer;transition:transform .08s;
+}
+.judge-case:active{transform:translateY(2px)}
+.judge-case.done{border-color:var(--gold);border-bottom-color:var(--gold-d)}
+.judge-case-head{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.judge-case-icon{font-size:28px;flex:none}
+.judge-case-title{font-weight:900;font-size:15px}
+.judge-case-sub{font-size:12px;font-weight:700;color:var(--ink-l)}
+.judge-case-snippet{font-size:12.5px;font-weight:700;color:var(--ink-l);line-height:1.4}
+.judge-tag{
+  display:inline-block;font-size:10.5px;font-weight:900;letter-spacing:.4px;
+  text-transform:uppercase;background:var(--blue);color:#fff;padding:3px 8px;border-radius:99px;
+  margin-left:auto;
+}
+.judge-tag.done{background:var(--gold);color:#7a5a00}
+
+.judge-sheet{
+  background:var(--card);border:2px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px;
+}
+.judge-row{display:flex;justify-content:space-between;padding:7px 0;font-size:13.5px;font-weight:700;border-bottom:1px dashed var(--line)}
+.judge-row:last-child{border-bottom:none}
+.judge-row b{font-weight:900;color:var(--ink-l);min-width:80px}
+.judge-score-bands{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.score-band{
+  display:flex;align-items:center;gap:12px;background:var(--card);
+  border:2px solid var(--line);border-bottom-width:5px;border-radius:14px;
+  padding:13px 14px;cursor:pointer;font-family:inherit;color:var(--ink);
+  font-size:14px;font-weight:800;text-align:left;
+  transition:transform .08s,border-color .12s;
+}
+.score-band:hover:not(.dis){border-color:#cfcfcf}
+.score-band:active:not(.dis){transform:translateY(2px)}
+.score-band .band-range{
+  font-size:11px;font-weight:900;color:#fff;background:var(--blue);
+  padding:3px 9px;border-radius:99px;flex:none;
+}
+.score-band.correct{background:var(--green-l);border-color:var(--green)}
+.score-band.correct .band-range{background:var(--green)}
+.score-band.wrong{background:var(--red-l);border-color:var(--red)}
+.score-band.wrong .band-range{background:var(--red)}
+.score-band.dis{cursor:default}
+
+/* ==================== CONFETTI / TOAST ==================== */
 .confetti{position:fixed;top:-50px;z-index:9999;pointer-events:none;animation:fall 2.8s linear forwards}
 @keyframes fall{to{transform:translateY(115vh) rotate(600deg);opacity:.2}}
 
-/* ---------- TOAST ---------- */
 .toast{
   position:fixed;left:50%;top:22px;transform:translate(-50%,-80px);z-index:900;
-  background:var(--ink);color:#fff;font-weight:800;font-size:13.5px;padding:11px 20px;border-radius:99px;
-  transition:transform .3s cubic-bezier(.2,.9,.3,1.3);white-space:nowrap;
+  background:var(--ink);color:var(--bg);font-weight:800;font-size:13.5px;padding:11px 20px;border-radius:99px;
+  transition:transform .3s cubic-bezier(.2,.9,.3,1.3);white-space:nowrap;max-width:90vw;overflow:hidden;text-overflow:ellipsis;
 }
 .toast.show{transform:translate(-50%,0)}
+
+.ach-popup{
+  position:fixed;top:22px;left:50%;transform:translate(-50%,-120px);z-index:950;
+  background:linear-gradient(135deg,#ffc800,#ff9c00);color:#fff;font-weight:900;
+  padding:14px 22px;border-radius:18px;box-shadow:0 8px 24px rgba(0,0,0,.25);
+  display:flex;align-items:center;gap:12px;transition:transform .4s cubic-bezier(.2,.9,.3,1.4);
+  max-width:92vw;
+}
+.ach-popup.show{transform:translate(-50%,0)}
+.ach-popup .ap-icon{font-size:30px;line-height:1}
+.ach-popup .ap-body{display:flex;flex-direction:column}
+.ach-popup .ap-title{font-size:11px;text-transform:uppercase;letter-spacing:1px;opacity:.85}
+.ach-popup .ap-name{font-size:15px}
 
 @media(max-width:400px){
   .prompt{font-size:18px}
   .node{width:66px;height:66px;font-size:25px}
   .hero h1{font-size:22px}
   .consultor-photo{width:54px;height:54px}
+  .quick-nav{gap:6px}
+  .qnav-icon{font-size:18px}
+  .qnav-label{font-size:9px}
 }
 </style>
 </head>
@@ -233,19 +423,37 @@ body{
   <section id="screen-home" class="screen active">
     <header class="topbar">
       <div class="stat streak">🔥 <span id="hStreak">0</span></div>
-      <div class="stat xp">⚡ <span id="hXp">0</span> XP</div>
+      <div class="stat xp">⚡ <span id="hXp">0</span></div>
       <div class="stat coins">🪙 <span id="hCoins">0</span></div>
       <div class="stat">🏅 <span id="hStars">0</span></div>
     </header>
 
     <div class="hero">
       <h1>🍺 BeerQuest</h1>
-      <p>Domina los estilos de cerveza artesanal según la guía <b>BJCP</b>. ¡Aprende juzgando!</p>
+      <p>Domina los estilos de cerveza artesanal según la guía <b>BJCP</b>.</p>
       <div class="hero-bar"><span id="heroBar" style="width:0%"></span></div>
-      <div class="hero-sub" id="heroSub">0 de 24 lecciones completadas</div>
+      <div class="hero-sub" id="heroSub">0 de 28 lecciones completadas</div>
     </div>
 
-    <!-- Consultor José Guerrero -->
+    <div class="quick-nav">
+      <button class="qnav" onclick="openJudge()">
+        <span class="qnav-icon">⚖️</span>
+        <span class="qnav-label">Juez BJCP</span>
+      </button>
+      <button class="qnav" onclick="openShop()">
+        <span class="qnav-icon">🛒</span>
+        <span class="qnav-label">Tienda</span>
+      </button>
+      <button class="qnav" onclick="openAchievements()">
+        <span class="qnav-icon">🏆</span>
+        <span class="qnav-label">Logros</span>
+      </button>
+      <button class="qnav" onclick="openMissions()">
+        <span class="qnav-icon"><span class="badge" id="missionBadge" data-badge="0">📋</span></span>
+        <span class="qnav-label">Misiones</span>
+      </button>
+    </div>
+
     <div class="consultor-card">
       <img class="consultor-photo" src="https://i.postimg.cc/kMVyVY3b/Whats-App-Image-2026-03-28-at-11-58-56-AM.jpg" alt="José Guerrero, consultor cervecero">
       <div class="consultor-info">
@@ -265,6 +473,7 @@ body{
       <div class="progress-track"><div id="progressBar" class="progress-fill"></div></div>
       <div class="hearts-row" id="heartsRow"></div>
     </header>
+    <div class="powerup-bar" id="powerupBar"></div>
     <div id="questionArea" class="question-area"></div>
   </section>
 
@@ -290,6 +499,71 @@ body{
     </div>
   </section>
 
+  <!-- ================= SHOP ================= -->
+  <section id="screen-shop" class="screen">
+    <div class="page-head">
+      <button class="icon-btn" onclick="goHome()">←</button>
+      <div>
+        <h2>🛒 Tienda</h2>
+        <p class="sub">Gasta tus monedas en mejoras</p>
+      </div>
+      <div class="stat coins" style="margin-left:auto">🪙 <span id="shopCoins">0</span></div>
+    </div>
+    <div class="section-title">Temas</div>
+    <div class="shop-grid" id="shopThemes"></div>
+    <div class="section-title">Avatares</div>
+    <div class="shop-grid" id="shopAvatars"></div>
+    <div class="section-title">Comodines (para lecciones)</div>
+    <div class="shop-grid" id="shopPowerups"></div>
+  </section>
+
+  <!-- ================= ACHIEVEMENTS ================= -->
+  <section id="screen-achievements" class="screen">
+    <div class="page-head">
+      <button class="icon-btn" onclick="goHome()">←</button>
+      <div>
+        <h2>🏆 Logros</h2>
+        <p class="sub" id="achProgress">0 de 0 desbloqueados</p>
+      </div>
+    </div>
+    <div class="ach-list" id="achList"></div>
+  </section>
+
+  <!-- ================= MISSIONS ================= -->
+  <section id="screen-missions" class="screen">
+    <div class="page-head">
+      <button class="icon-btn" onclick="goHome()">←</button>
+      <div>
+        <h2>📋 Misiones diarias</h2>
+        <p class="sub" id="missionSub">Se renuevan cada día a medianoche</p>
+      </div>
+    </div>
+    <div class="mission-list" id="missionList"></div>
+  </section>
+
+  <!-- ================= JUDGE MODE ================= -->
+  <section id="screen-judge" class="screen">
+    <div class="page-head">
+      <button class="icon-btn" onclick="goHome()">←</button>
+      <div>
+        <h2>⚖️ Modo Juez BJCP</h2>
+        <p class="sub" id="judgeSub">Evalúa cervezas como un juez real</p>
+      </div>
+    </div>
+    <div class="judge-cases" id="judgeCases"></div>
+  </section>
+
+  <!-- ================= JUDGE PLAY ================= -->
+  <section id="screen-judge-play" class="screen">
+    <header class="lesson-bar">
+      <button class="icon-btn" onclick="backToJudgeList()" title="Salir">✕</button>
+      <div class="progress-track"><div id="judgeBar" class="progress-fill" style="background:var(--blue)"></div></div>
+      <div class="hearts-row" id="judgeCaseInfo" style="font-size:12px"></div>
+    </header>
+    <div id="judgePlayArea"></div>
+  </section>
+
+  <!-- ================= FEEDBACK ================= -->
   <div class="feedback" id="feedback">
     <div class="fb-inner">
       <div class="fb-head"><span id="fbIcon">✓</span><span id="fbTitle">¡Correcto!</span></div>
@@ -300,6 +574,13 @@ body{
 </div>
 
 <div class="toast" id="toast"></div>
+<div class="ach-popup" id="achPopup">
+  <span class="ap-icon" id="apIcon">🏆</span>
+  <span class="ap-body">
+    <span class="ap-title">Logro desbloqueado</span>
+    <span class="ap-name" id="apName">…</span>
+  </span>
+</div>
 
 <script>
 /* =========================================================
@@ -329,7 +610,7 @@ function srmToHex(srm){
 }
 
 /* =========================================================
-   CONSEJOS Y DATOS CURIOSOS DE JOSÉ GUERRERO
+   CONSEJOS DEL CONSULTOR
    ========================================================= */
 const CONSEJOS = [
   "El BJCP no es una receta, es una guía. Dos cervezas del mismo estilo pueden ser muy distintas y ambas ser correctas.",
@@ -355,10 +636,24 @@ const CONSEJOS = [
 ];
 
 /* =========================================================
-   CONTENIDO BJCP — 8 UNIDADES / 24 LECCIONES
+   OFF-FLAVORS — DATOS
+   ========================================================= */
+const OFFFLAVORS = [
+  { n:'Diacetilo', e:'🧈', d:'Aroma a mantequilla o caramelo de butterscotch. Causa: fermentación incompleta o trasiego prematuro.' },
+  { n:'DMS', e:'🌽', d:'Aroma a maíz cocido o verduras. Causa: hervor poco vigoroso o tapado.' },
+  { n:'Acetaldehído', e:'🍏', d:'Aroma a manzana verde o hierba recién cortada. Causa: fermentación incompleta.' },
+  { n:'Fenoles', e:'💊', d:'Aroma medicinal, a clavo o a vendaje. Causa: contaminación o cloro en el agua.' },
+  { n:'Oxidación', e:'📦', d:'Aroma a cartón húmedo o jerez. Causa: exposición al oxígeno tras el envasado.' },
+  { n:'Luz (skunky)', e:'☀️', d:'Aroma a mofeta o lúpulo estropeado. Causa: exposición a la luz UV en botellas claras o verdes.' },
+  { n:'Ácido acético', e:'🍶', d:'Aroma avinagrado. Causa: contaminación por Acetobacter en presencia de oxígeno.' },
+  { n:'Autólisis', e:'🥩', d:'Aroma a carne o caldo. Causa: levadura muerta dejada demasiado tiempo en contacto.' }
+];
+
+/* =========================================================
+   CONTENIDO BJCP — 9 UNIDADES
    ========================================================= */
 const UNITS = [
-/* ================== UNIDAD 1 ================== */
+/* ============ U1 ============ */
 {
   id:'u1', title:'Fundamentos', sub:'El idioma del juez', emoji:'📜',
   color:'#ffb703', dark:'#e09b00',
@@ -412,7 +707,7 @@ const UNITS = [
     ]}
   ]
 },
-/* ================== UNIDAD 2 ================== */
+/* ============ U2 ============ */
 {
   id:'u2', title:'Lagers del mundo', sub:'Fermentadas en frío', emoji:'❄️',
   color:'#1cb0f6', dark:'#0f8fc7',
@@ -484,7 +779,7 @@ const UNITS = [
     ]}
   ]
 },
-/* ================== UNIDAD 3 ================== */
+/* ============ U3 ============ */
 {
   id:'u3', title:'Trigo y Bélgica', sub:'Especias y levaduras salvajes', emoji:'🍌',
   color:'#ce82ff', dark:'#a568cc',
@@ -555,7 +850,7 @@ const UNITS = [
     ]}
   ]
 },
-/* ================== UNIDAD 4 ================== */
+/* ============ U4 ============ */
 {
   id:'u4', title:'Islas Británicas', sub:'Ales de pub', emoji:'🇬🇧',
   color:'#e63946', dark:'#b32b36',
@@ -610,7 +905,7 @@ const UNITS = [
     ]}
   ]
 },
-/* ================== UNIDAD 5 ================== */
+/* ============ U5 ============ */
 {
   id:'u5', title:'Ales americanas', sub:'El imperio del lúpulo', emoji:'🇺🇸',
   color:'#58cc02', dark:'#48a300',
@@ -665,7 +960,7 @@ const UNITS = [
     ]}
   ]
 },
-/* ================== UNIDAD 6 ================== */
+/* ============ U6 ============ */
 {
   id:'u6', title:'Ácidas y salvajes', sub:'Funk, bacterias y madera', emoji:'🦠',
   color:'#ff8fab', dark:'#d96a86',
@@ -702,7 +997,7 @@ const UNITS = [
     ]}
   ]
 },
-/* ================== UNIDAD 7 ================== */
+/* ============ U7 ============ */
 {
   id:'u7', title:'Especiales y experimentales', sub:'Frutas, especias y madera', emoji:'🧪',
   color:'#ffb703', dark:'#e09b00',
@@ -739,9 +1034,9 @@ const UNITS = [
     ]}
   ]
 },
-/* ================== UNIDAD 8 ================== */
+/* ============ U8 ============ */
 {
-  id:'u8', title:'Cervezas históricas y fuertes', sub:'De la tradición a la potencia', emoji:'🏰',
+  id:'u8', title:'Históricas y fuertes', sub:'De la tradición a la potencia', emoji:'🏰',
   color:'#8b5cf6', dark:'#6d3fd4',
   lessons:[
     { id:'u8l1', title:'Cervezas históricas', icon:'📜', qs:[
@@ -775,26 +1070,257 @@ const UNITS = [
         exp:'Cierto. Es una versión más fuerte y limpia de la porter inglesa, popular en los países bálticos.' }
     ]}
   ]
+},
+/* ============ U9 — OFF-FLAVORS ============ */
+{
+  id:'u9', title:'Defectos y Off-Flavors', sub:'Detecta lo que no debería estar', emoji:'🚫',
+  color:'#ef4444', dark:'#b91c1c',
+  lessons:[
+    { id:'u9l1', title:'Defectos de fermentación', icon:'🧫', qs:[
+      { t:'mc', q:'¿Qué defecto tiene aroma a mantequilla o caramelo de butterscotch?',
+        opts:['Diacetilo','DMS','Acetaldehído','Fenoles'], a:0,
+        exp:'El diacetilo es un subproducto de la fermentación. Se produce por fermentación incompleta o trasiego prematuro.' },
+      { t:'mc', q:'El aroma a maíz cocido o verduras cocidas se debe a...',
+        opts:['DMS (dimetil sulfuro)','Diacetilo','Acetaldehído','Autólisis'], a:0,
+        exp:'El DMS aparece cuando el hervor es poco vigoroso o si se tapa la olla. Se percibe como maíz o col cocida.' },
+      { t:'tf', q:'El acetaldehído se percibe como manzana verde o hierba recién cortada.', a:true,
+        exp:'Cierto. Es un precursor del etanol que queda sin reducir si la fermentación se corta antes de tiempo.' },
+      { t:'mc', q:'Un aroma medicinal, a clavo o a vendaje indica presencia de...',
+        opts:['Fenoles (clorofenoles)','Diacetilo','DMS','Oxidación'], a:0,
+        exp:'Los fenoles suelen venir de contaminación bacteriana o de cloro en el agua de maceración.' },
+      { t:'tf', q:'El diacetilo es aceptable en cualquier estilo de cerveza.', a:false,
+        exp:'Falso. Es un defecto en la mayoría de estilos, aunque puede ser aceptable en pequeñas dosis en algunas ales inglesas.' }
+    ]},
+    { id:'u9l2', title:'Defectos de envasado y oxidación', icon:'📦', qs:[
+      { t:'mc', q:'El aroma a cartón húmedo o a jerez indica...',
+        opts:['Oxidación','DMS','Diacetilo','Fenoles'], a:0,
+        exp:'La oxidación ocurre cuando la cerveza entra en contacto con oxígeno tras el envasado. Afecta color, sabor y aroma.' },
+      { t:'mc', q:'El aroma a mofeta (skunky) aparece cuando...',
+        opts:['La cerveza se expone a luz UV, sobre todo en botellas claras o verdes','Se fermenta en frío','Se usan lúpulos viejos','Se añade demasiada malta'], a:0,
+        exp:'La luz UV reacciona con los compuestos del lúpulo y produce 3-metil-2-buten-1-tiol, el mismo de la mofeta.' },
+      { t:'tf', q:'El sabor avinagrado indica contaminación por Acetobacter en presencia de oxígeno.', a:true,
+        exp:'Cierto. Acetobacter transforma el etanol en ácido acético. Es un defecto en casi todos los estilos.' },
+      { t:'mc', q:'El aroma a carne o caldo aparece por...',
+        opts:['Autólisis de la levadura','Oxidación','DMS','Diacetilo'], a:0,
+        exp:'Si la levadura muerta queda mucho tiempo en contacto con la cerveza, se rompe y libera compuestos umami.' },
+      { t:'tf', q:'Servir la cerveza en un vaso sucio o con restos de jabón puede arruinar el aroma.', a:true,
+        exp:'Cierto. Los residuos de grasa y jabón destruyen la espuma y modifican la percepción del aroma.' }
+    ]}
+  ]
 }
 ];
 
 /* =========================================================
-   ESTADO Y PERSISTENCIA
+   LOGROS
    ========================================================= */
-const SAVE_KEY = 'beerquest_v2';
-let state = { xp:0, coins:0, streak:0, sound:true, completed:{}, tipIndex:0 };
+const ACHIEVEMENTS = [
+  { id:'first_lesson', icon:'🥇', name:'Primer sorbo',       desc:'Completa tu primera lección' },
+  { id:'ten_lessons',  icon:'🍺', name:'Catador en prácticas', desc:'Completa 10 lecciones' },
+  { id:'all_lessons',  icon:'🏆', name:'Maestro cervecero',   desc:'Completa todas las lecciones' },
+  { id:'perfect',      icon:'⭐', name:'Puntuación perfecta', desc:'Consigue 3 estrellas en una lección' },
+  { id:'five_perfect', icon:'✨', name:'Perfeccionista',      desc:'Consigue 3 estrellas en 5 lecciones' },
+  { id:'streak_5',     icon:'🔥', name:'En racha',            desc:'5 aciertos seguidos en una lección' },
+  { id:'streak_10',    icon:'💥', name:'Imparable',           desc:'10 aciertos seguidos en una lección' },
+  { id:'xp_100',       icon:'⚡', name:'Aprendiz',            desc:'Acumula 100 XP' },
+  { id:'xp_500',       icon:'🌟', name:'Veterano',            desc:'Acumula 500 XP' },
+  { id:'xp_1000',      icon:'🎇', name:'Élite',               desc:'Acumula 1000 XP' },
+  { id:'coins_100',    icon:'🪙', name:'Ahorrador',           desc:'Acumula 100 monedas' },
+  { id:'coins_500',    icon:'💰', name:'Magnate',             desc:'Acumula 500 monedas' },
+  { id:'judge_first',  icon:'⚖️', name:'Primer veredicto',    desc:'Completa tu primer caso como juez' },
+  { id:'judge_5',      icon:'👨‍⚖️', name:'Juez en prácticas',   desc:'Completa 5 casos como juez' },
+  { id:'judge_expert', icon:'🎖️', name:'Paladar experto',     desc:'Acierta 5 casos de juez de forma consecutiva' },
+  { id:'shop_buyer',   icon:'🛍️', name:'Consumidor',          desc:'Compra algo en la tienda' },
+  { id:'daily_3',      icon:'📅', name:'Constante',           desc:'Completa las 3 misiones diarias' },
+  { id:'off_flavor',   icon:'🔬', name:'Detective de sabores', desc:'Completa la unidad de Off-Flavors' }
+];
+const ACH_MAP = {};
+ACHIEVEMENTS.forEach(a => ACH_MAP[a.id] = a);
+
+/* =========================================================
+   TIENDA — CATÁLOGO
+   ========================================================= */
+const SHOP_THEMES = [
+  { id:'light', icon:'☀️', name:'Claro (por defecto)', desc:'El tema original', price:0 },
+  { id:'dark',  icon:'🌙', name:'Modo oscuro',        desc:'Perfecto para catas nocturnas', price:250 }
+];
+const SHOP_AVATARS = [
+  { id:'default', emoji:'🍺', name:'Jarra clásica', price:0 },
+  { id:'ipa',     emoji:'🌿', name:'IPA',          price:80 },
+  { id:'stout',   emoji:'🖤', name:'Stout',        price:80 },
+  { id:'saison',  emoji:'🍋', name:'Saison',       price:100 },
+  { id:'tripel',  emoji:'⛪', name:'Tripel',       price:120 },
+  { id:'lambic',  emoji:'🍇', name:'Lambic',       price:150 },
+  { id:'judge',   emoji:'⚖️', name:'Juez BJCP',    price:300 }
+];
+const SHOP_POWERUPS = [
+  { id:'fifty',  icon:'✂️', name:'50/50',   desc:'Elimina 2 respuestas incorrectas', price:40 },
+  { id:'hint',   icon:'💡', name:'Pista',   desc:'Revela la explicación antes de responder', price:30 },
+  { id:'shield', icon:'🛡️', name:'Escudo',  desc:'Protege 1 vida en la próxima falla', price:80 }
+];
+
+/* =========================================================
+   MISIONES DIARIAS
+   ========================================================= */
+const MISSION_POOL = [
+  { id:'lessons_2',   icon:'📚', name:'Completa 2 lecciones',      target:2,  reward:{xp:40, coins:15}, track:'lessons_completed_today' },
+  { id:'correct_15',  icon:'🎯', name:'Acierta 15 preguntas',      target:15, reward:{xp:50, coins:20}, track:'correct_today' },
+  { id:'xp_100',      icon:'⚡', name:'Gana 100 XP hoy',           target:100,reward:{xp:0,  coins:25}, track:'xp_today' },
+  { id:'streak_5',    icon:'🔥', name:'Logra una racha de 5',      target:5,  reward:{xp:40, coins:15}, track:'best_streak_today' },
+  { id:'judge_1',     icon:'⚖️', name:'Completa 1 caso de juez',   target:1,  reward:{xp:60, coins:25}, track:'judge_today' },
+  { id:'perfect_1',   icon:'⭐', name:'Consigue una lección perfecta', target:1, reward:{xp:60, coins:25}, track:'perfect_today' },
+  { id:'coins_30',    icon:'🪙', name:'Gana 30 monedas hoy',       target:30, reward:{xp:30, coins:0},  track:'coins_today' }
+];
+
+/* =========================================================
+   MODO JUEZ BJCP — CASOS
+   ========================================================= */
+const JUDGE_CASES = [
+  {
+    id:'jc1', icon:'🍺', title:'Caso #1 · Ale dorada',
+    snippet:'Aroma a pan, ligeramente especiado, sin defectos. Sabor maltoso con final seco y lupulado. Color dorado brillante, espuma blanca persistente.',
+    correct:'38-44',
+    bands:[
+      { range:'45-50', label:'Excelente', text:'Cerveza ejemplar, sin defectos y con carácter perfectamente alineado al estilo.' },
+      { range:'38-44', label:'Muy buena', text:'Estilo correcto, sin defectos destacables. Puede mejorar algún matiz.' },
+      { range:'30-37', label:'Buena',     text:'Cumple el estilo, pero con pequeños defectos o desviaciones.' },
+      { range:'21-29', label:'Regular',   text:'Defectos evidentes o desviaciones notables del estilo.' },
+      { range:'14-20', label:'Deficiente',text:'Defectos graves, difícilmente reconocible como el estilo declarado.' }
+    ],
+    exp:'Una cerveza sin defectos, con carácter varietal claro y alineada al estilo merece 38-44. Solo llegaría a 45+ si fuera excepcional.'
+  },
+  {
+    id:'jc2', icon:'🧈', title:'Caso #2 · Ale con diacetilo',
+    snippet:'Aroma claro a mantequilla (diacetilo) que enmascara el lúpulo. Sabor con notas a caramelo de butterscotch. Final algo pesado.',
+    correct:'21-29',
+    bands:[
+      { range:'45-50', label:'Excelente', text:'Cerveza ejemplar, sin defectos y con carácter perfectamente alineado al estilo.' },
+      { range:'38-44', label:'Muy buena', text:'Estilo correcto, sin defectos destacables.' },
+      { range:'30-37', label:'Buena',     text:'Cumple el estilo, pero con pequeños defectos.' },
+      { range:'21-29', label:'Regular',   text:'Defectos evidentes o desviaciones notables del estilo.' },
+      { range:'14-20', label:'Deficiente',text:'Defectos graves, difícilmente reconocible como el estilo declarado.' }
+    ],
+    exp:'El diacetilo es un defecto serio en la mayoría de estilos. Penaliza fuerte y baja la cerveza a la banda de 21-29.'
+  },
+  {
+    id:'jc3', icon:'💥', title:'Caso #3 · Imperial Stout excepcional',
+    snippet:'Aroma complejo a chocolate negro, café, vainilla y frutas oscuras. Sabor intenso, cálido, con final largo y equilibrado. Sin defectos.',
+    correct:'45-50',
+    bands:[
+      { range:'45-50', label:'Excelente', text:'Cerveza ejemplar, sin defectos y con carácter perfectamente alineado al estilo.' },
+      { range:'38-44', label:'Muy buena', text:'Estilo correcto, sin defectos destacables.' },
+      { range:'30-37', label:'Buena',     text:'Cumple el estilo, pero con pequeños defectos.' },
+      { range:'21-29', label:'Regular',   text:'Defectos evidentes o desviaciones notables del estilo.' },
+      { range:'14-20', label:'Deficiente',text:'Defectos graves, difícilmente reconocible como el estilo declarado.' }
+    ],
+    exp:'Compleja, sin defectos, con integración perfecta de maltas y alcohol. Es lo que un juez llama "cerveza de medalla" (45-50).'
+  },
+  {
+    id:'jc4', icon:'📦', title:'Caso #4 · Lager oxidada',
+    snippet:'Aroma a cartón húmedo y jerez. Color ligeramente ambarino. Sabor plano, con notas a papel mojado. Final seco pero apagado.',
+    correct:'14-20',
+    bands:[
+      { range:'45-50', label:'Excelente', text:'Cerveza ejemplar, sin defectos.' },
+      { range:'38-44', label:'Muy buena', text:'Estilo correcto, sin defectos destacables.' },
+      { range:'30-37', label:'Buena',     text:'Cumple el estilo, pero con pequeños defectos.' },
+      { range:'21-29', label:'Regular',   text:'Defectos evidentes o desviaciones notables.' },
+      { range:'14-20', label:'Deficiente',text:'Defectos graves, difícilmente reconocible como el estilo declarado.' }
+    ],
+    exp:'La oxidación es un defecto mayor. En una lager pálida afecta especialmente. Baja a 14-20 sin discusión.'
+  },
+  {
+    id:'jc5', icon:'🌽', title:'Caso #5 · Cream Ale con DMS',
+    snippet:'Aroma a maíz cocido (DMS) que domina sobre el perfil maltoso. Sabor dulzón con verduras cocidas. Final algo empalagoso.',
+    correct:'21-29',
+    bands:[
+      { range:'45-50', label:'Excelente', text:'Cerveza ejemplar, sin defectos.' },
+      { range:'38-44', label:'Muy buena', text:'Estilo correcto, sin defectos destacables.' },
+      { range:'30-37', label:'Buena',     text:'Cumple el estilo, pero con pequeños defectos.' },
+      { range:'21-29', label:'Regular',   text:'Defectos evidentes o desviaciones notables del estilo.' },
+      { range:'14-20', label:'Deficiente',text:'Defectos graves, difícilmente reconocible como el estilo.' }
+    ],
+    exp:'El DMS es un defecto serio. Aunque la Cream Ale puede tener un toque de maíz, aquí domina y arruina el perfil. 21-29.'
+  },
+  {
+    id:'jc6', icon:'🍺', title:'Caso #6 · American Pale Ale correcta',
+    snippet:'Aroma cítrico a pomelo y resina, con malta de fondo. Sabor lupulado, amargor medio-alto, final seco y limpio. Sin defectos.',
+    correct:'38-44',
+    bands:[
+      { range:'45-50', label:'Excelente', text:'Cerveza ejemplar, sin defectos.' },
+      { range:'38-44', label:'Muy buena', text:'Estilo correcto, sin defectos destacables.' },
+      { range:'30-37', label:'Buena',     text:'Cumple el estilo, pero con pequeños defectos.' },
+      { range:'21-29', label:'Regular',   text:'Defectos evidentes o desviaciones notables.' },
+      { range:'14-20', label:'Deficiente',text:'Defectos graves, difícilmente reconocible como el estilo.' }
+    ],
+    exp:'Una APA limpia, con lúpulo americano bien expresado y sin defectos es una cerveza de 38-44. Para 45+ debería ser sublime.'
+  },
+  {
+    id:'jc7', icon:'🍌', title:'Caso #7 · Hefeweizen ejemplar',
+    snippet:'Aroma intenso a plátano y clavo, con un fondo de pan. Sabor refrescante, cuerpo medio-alto, carbonatación alta. Final seco.',
+    correct:'45-50',
+    bands:[
+      { range:'45-50', label:'Excelente', text:'Cerveza ejemplar, sin defectos.' },
+      { range:'38-44', label:'Muy buena', text:'Estilo correcto, sin defectos destacables.' },
+      { range:'30-37', label:'Buena',     text:'Cumple el estilo, pero con pequeños defectos.' },
+      { range:'21-29', label:'Regular',   text:'Defectos evidentes o desviaciones notables.' },
+      { range:'14-20', label:'Deficiente',text:'Defectos graves.' }
+    ],
+    exp:'Con los fenoles y ésteres perfectamente expresados, esta Hefeweizen es de libro. 45-50, cerveza de medalla.'
+  },
+  {
+    id:'jc8', icon:'☀️', title:'Caso #8 · Lager en botella verde',
+    snippet:'Aroma a mofeta (skunky) muy marcado. Sabor lupulado pero con ese toque sulfuroso. Color pajizo correcto.',
+    correct:'14-20',
+    bands:[
+      { range:'45-50', label:'Excelente', text:'Cerveza ejemplar.' },
+      { range:'38-44', label:'Muy buena', text:'Estilo correcto, sin defectos destacables.' },
+      { range:'30-37', label:'Buena',     text:'Cumple el estilo, con pequeños defectos.' },
+      { range:'21-29', label:'Regular',   text:'Defectos evidentes o desviaciones notables.' },
+      { range:'14-20', label:'Deficiente',text:'Defectos graves, difícilmente reconocible como el estilo declarado.' }
+    ],
+    exp:'La luz UV en botellas claras o verdes produce ese defecto "skunky". Es un defecto mayor. 14-20.'
+  }
+];
+
+/* =========================================================
+   ESTADO
+   ========================================================= */
+const SAVE_KEY = 'beerquest_v3';
+let state = {
+  xp:0, coins:0, streak:0, sound:true,
+  completed:{},
+  achievements:{},
+  judge:{ completed:{}, perfectStreak:0 },
+  shop:{ themes:['light'], avatars:['default'], activeTheme:'light', activeAvatar:'default' },
+  inventory:{ fifty:0, hint:0, shield:0 },
+  daily:{ date:'', missions:[], progress:{}, claimed:{} },
+  stats:{ lessonsTotal:0 },
+  today: { lessons:0, correct:0, xp:0, coins:0, bestStreak:0, judge:0, perfect:0 }
+};
 
 function load(){
   try{
     const raw = localStorage.getItem(SAVE_KEY);
-    if(raw) state = Object.assign(state, JSON.parse(raw));
+    if(raw){
+      const parsed = JSON.parse(raw);
+      state = Object.assign(state, parsed);
+      state.shop = Object.assign({themes:['light'],avatars:['default'],activeTheme:'light',activeAvatar:'default'}, parsed.shop||{});
+      state.inventory = Object.assign({fifty:0,hint:0,shield:0}, parsed.inventory||{});
+      state.judge = Object.assign({completed:{},perfectStreak:0}, parsed.judge||{});
+      state.today = Object.assign({lessons:0,correct:0,xp:0,coins:0,bestStreak:0,judge:0,perfect:0}, parsed.today||{});
+    }
   }catch(e){}
+  applyTheme();
+  ensureDaily();
 }
 function save(){
   try{ localStorage.setItem(SAVE_KEY, JSON.stringify(state)); }catch(e){}
 }
+function applyTheme(){
+  const t = state.shop.activeTheme || 'light';
+  document.body.classList.toggle('dark', t === 'dark');
+}
 
-/* Lista plana de lecciones para el desbloqueo lineal */
+/* Lista plana de lecciones */
 const FLAT = [];
 UNITS.forEach(u => u.lessons.forEach(l => FLAT.push({unitId:u.id, lesson:l})));
 
@@ -802,6 +1328,38 @@ function isUnlocked(lessonId){
   const idx = FLAT.findIndex(f => f.lesson.id === lessonId);
   if(idx <= 0) return true;
   return !!state.completed[FLAT[idx-1].lesson.id];
+}
+
+/* =========================================================
+   MISIONES DIARIAS
+   ========================================================= */
+function todayStr(){
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+function ensureDaily(){
+  const today = todayStr();
+  if(state.daily.date !== today){
+    // Reiniciar contadores del día
+    state.today = { lessons:0, correct:0, xp:0, coins:0, bestStreak:0, judge:0, perfect:0 };
+    // Elegir 3 misiones aleatorias
+    const pool = [...MISSION_POOL];
+    shuffleArr(pool);
+    state.daily = {
+      date: today,
+      missions: pool.slice(0,3).map(m => m.id),
+      progress: {},
+      claimed: {}
+    };
+    save();
+  }
+}
+
+function missionProgress(id){
+  const m = MISSION_POOL.find(x => x.id === id);
+  if(!m) return {cur:0, target:1, done:false};
+  const cur = state.today[m.track] || 0;
+  return { cur, target: m.target, done: cur >= m.target, m };
 }
 
 /* =========================================================
@@ -827,15 +1385,18 @@ function tone(freq, start, dur, type, gain){
   g.gain.setValueAtTime(0.0001, t0);
   g.gain.linearRampToValueAtTime(gain, t0 + 0.015);
   g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
-  o.connect(g); g.connect(ctx.destination);
+  o.connect(g); g.connect(destinationSafe());
   o.start(t0); o.stop(t0 + dur + 0.05);
 }
+function destinationSafe(){ return actx.destination; }
 const sfx = {
   tap(){ tone(420, 0, 0.05, 'square', 0.025); },
   correct(){ tone(659,0,0.12); tone(880,0.08,0.20); },
   wrong(){ tone(200,0,0.22,'sawtooth',0.05); tone(150,0.10,0.28,'sawtooth',0.045); },
   win(){ [523,659,784,1047].forEach((f,i)=>tone(f, i*0.11, 0.32, 'sine', 0.075)); },
-  fail(){ [392,330,262].forEach((f,i)=>tone(f, i*0.14, 0.35, 'triangle', 0.06)); }
+  fail(){ [392,330,262].forEach((f,i)=>tone(f, i*0.14, 0.35, 'triangle', 0.06)); },
+  coin(){ tone(1200,0,0.08,'square',0.05); tone(1600,0.06,0.10,'square',0.04); },
+  ach(){ [784,988,1175,1568].forEach((f,i)=>tone(f, i*0.09, 0.28, 'sine', 0.08)); }
 };
 
 /* =========================================================
@@ -853,7 +1414,7 @@ function toast(msg){
   t.textContent = msg;
   t.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=>t.classList.remove('show'), 2000);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 2200);
 }
 function shuffleArr(a){
   for(let i=a.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
@@ -871,12 +1432,61 @@ function prepare(q){
     answer: order.indexOf(q.a)
   });
 }
-function randomTip(){
-  return CONSEJOS[Math.floor(Math.random() * CONSEJOS.length)];
+function randomTip(){ return CONSEJOS[Math.floor(Math.random() * CONSEJOS.length)]; }
+
+/* =========================================================
+   SISTEMA DE LOGROS
+   ========================================================= */
+function unlock(achId){
+  if(state.achievements[achId]) return false;
+  const a = ACH_MAP[achId];
+  if(!a) return false;
+  state.achievements[achId] = true;
+  state.coins += 20;
+  save();
+  showAchPopup(a);
+  sfx.ach();
+  return true;
+}
+function showAchPopup(a){
+  const pop = $('achPopup');
+  $('apIcon').textContent = a.icon;
+  $('apName').textContent = a.name;
+  pop.classList.add('show');
+  setTimeout(()=>pop.classList.remove('show'), 3000);
+}
+function checkAchievements(){
+  const doneLessons = FLAT.filter(f => state.completed[f.lesson.id]).length;
+  const threeStarLessons = Object.values(state.completed).filter(v => v === 3).length;
+  const totalStars = Object.values(state.completed).reduce((a,b)=>a+b,0);
+  const totalXp = state.xp;
+  const totalCoins = state.coins;
+  const judgeDone = Object.keys(state.judge.completed).length;
+
+  if(doneLessons >= 1) unlock('first_lesson');
+  if(doneLessons >= 10) unlock('ten_lessons');
+  if(doneLessons >= FLAT.length) unlock('all_lessons');
+  if(threeStarLessons >= 1) unlock('perfect');
+  if(threeStarLessons >= 5) unlock('five_perfect');
+  if(totalXp >= 100) unlock('xp_100');
+  if(totalXp >= 500) unlock('xp_500');
+  if(totalXp >= 1000) unlock('xp_1000');
+  if(totalCoins >= 100) unlock('coins_100');
+  if(totalCoins >= 500) unlock('coins_500');
+  if(judgeDone >= 1) unlock('judge_first');
+  if(judgeDone >= 5) unlock('judge_5');
+  if(state.judge.perfectStreak >= 5) unlock('judge_expert');
+  if(state.shop.themes.length > 1 || state.shop.avatars.length > 1 || state.inventory.fifty+state.inventory.hint+state.inventory.shield > 0){
+    unlock('shop_buyer');
+  }
+  const missionsDone = state.daily.missions.filter(id => missionProgress(id).done).length;
+  if(missionsDone >= 3) unlock('daily_3');
+  const offFlavorDone = ['u9l1','u9l2'].every(id => state.completed[id]);
+  if(offFlavorDone) unlock('off_flavor');
 }
 
 /* =========================================================
-   PANTALLA PRINCIPAL
+   HOME
    ========================================================= */
 function renderHome(){
   const totalLessons = FLAT.length;
@@ -889,9 +1499,11 @@ function renderHome(){
   $('hStars').textContent = totalStars;
   $('heroBar').style.width = Math.round(doneLessons/totalLessons*100) + '%';
   $('heroSub').textContent = doneLessons + ' de ' + totalLessons + ' lecciones completadas';
-
-  // Consejo rotativo en la tarjeta del consultor
   $('homeTip').textContent = randomTip();
+
+  // Badge de misiones
+  const missionsReady = state.daily.missions.filter(id => missionProgress(id).done && !state.daily.claimed[id]).length;
+  $('missionBadge').setAttribute('data-badge', missionsReady);
 
   const wrap = $('unitsList');
   wrap.innerHTML = '';
@@ -950,27 +1562,73 @@ function renderHome(){
 }
 
 /* =========================================================
-   MOTOR DE LECCIÓN
+   LECCIÓN
    ========================================================= */
 let session = null;
 
 function startLesson(unit, lesson){
   session = {
-    unit: unit,
-    lesson: lesson,
+    unit, lesson,
     queue: lesson.qs.map(prepare),
     index: 0,
-    correct: 0,
-    wrong: 0,
-    hearts: 5,
-    streak: 0,
-    maxStreak: 0,
+    correct: 0, wrong: 0, hearts: 5,
+    streak: 0, maxStreak: 0,
     answered: false,
-    finished: false
+    shieldActive: false,
+    hintUsed: false,
+    isOffFlavor: unit.id === 'u9'
   };
   $('feedback').classList.remove('show');
   showScreen('lesson');
+  renderPowerups();
   renderQuestion();
+}
+
+function renderPowerups(){
+  const bar = $('powerupBar');
+  bar.innerHTML = '';
+  const ups = [
+    { id:'fifty', icon:'✂️', label:'50/50' },
+    { id:'hint',  icon:'💡', label:'Pista' },
+    { id:'shield',icon:'🛡️', label:'Escudo' }
+  ];
+  ups.forEach(u => {
+    const count = state.inventory[u.id] || 0;
+    const btn = document.createElement('button');
+    btn.className = 'powerup-btn' + (count === 0 ? ' dis' : '');
+    btn.innerHTML = u.icon + ' ' + u.label + ' <span class="count">' + count + '</span>';
+    btn.onclick = () => usePowerup(u.id, btn);
+    bar.appendChild(btn);
+  });
+}
+
+function usePowerup(id, btn){
+  if((state.inventory[id] || 0) <= 0){ toast('No tienes ese comodín'); return; }
+  if(session.answered && id !== 'shield'){ toast('Ya respondiste esta pregunta'); return; }
+
+  if(id === 'fifty'){
+    const q = session.queue[session.index];
+    if(q.opts.length < 3){ toast('No se puede usar aquí'); return; }
+    const wrongIdxs = [];
+    q.opts.forEach((_, i) => { if(i !== q.answer) wrongIdxs.push(i); });
+    shuffleArr(wrongIdxs);
+    const toHide = wrongIdxs.slice(0, 2);
+    document.querySelectorAll('#questionArea .choice').forEach((b, i) => {
+      if(toHide.includes(i)) b.classList.add('hidden-5050');
+    });
+    state.inventory.fifty--; save(); renderPowerups();
+    sfx.tap();
+  } else if(id === 'hint'){
+    const q = session.queue[session.index];
+    toast('💡 ' + q.exp.slice(0, 100) + (q.exp.length > 100 ? '…' : ''));
+    state.inventory.hint--; save(); renderPowerups();
+    sfx.tap();
+  } else if(id === 'shield'){
+    session.shieldActive = true;
+    state.inventory.shield--; save(); renderPowerups();
+    toast('🛡️ Escudo activo: la próxima falla no te quitará vida');
+    sfx.tap();
+  }
 }
 
 function updateHearts(){
@@ -1010,7 +1668,6 @@ function renderQuestion(){
 
   const choices = document.createElement('div');
   choices.className = 'choices';
-
   q.opts.forEach((opt, i) => {
     const b = document.createElement('button');
     b.className = 'choice';
@@ -1045,6 +1702,8 @@ function answer(choice, btn){
     session.correct++;
     session.streak++;
     session.maxStreak = Math.max(session.maxStreak, session.streak);
+    state.today.correct++;
+    state.today.bestStreak = Math.max(state.today.bestStreak, session.maxStreak);
     fb.classList.add('ok');
     $('fbIcon').textContent = '✓';
     $('fbTitle').textContent = session.streak >= 3
@@ -1054,10 +1713,16 @@ function answer(choice, btn){
   } else {
     session.wrong++;
     session.streak = 0;
-    session.hearts = Math.max(0, session.hearts - 1);
+    if(session.shieldActive){
+      session.shieldActive = false;
+      $('fbTitle').textContent = '🛡️ Escudo consumido';
+    } else {
+      session.hearts = Math.max(0, session.hearts - 1);
+    }
     fb.classList.add('bad');
-    $('fbIcon').textContent = '✕';
-    $('fbTitle').textContent = '¡Uy! No era esa';
+    if(!session.shieldActive) $('fbIcon').textContent = '✕';
+    $('fbTitle').textContent = $('fbTitle').textContent || '¡Uy! No era esa';
+    if(!$('fbTitle').textContent.includes('Escudo')) $('fbTitle').textContent = '¡Uy! No era esa';
     sfx.wrong();
   }
 
@@ -1084,7 +1749,7 @@ function nextStep(){
 }
 
 /* =========================================================
-   FIN DE LECCIÓN — PUNTOS Y MONEDAS
+   FIN DE LECCIÓN
    ========================================================= */
 function finishLesson(failed){
   const total = session.queue.length;
@@ -1092,22 +1757,19 @@ function finishLesson(failed){
   const accuracy = answeredCount ? session.correct / answeredCount : 0;
   const lessonId = session.lesson.id;
 
-  let stars = 0;
-  let xp = 0;
-  let coins = 0;
+  let stars = 0, xp = 0, coins = 0;
 
   if(!failed){
     stars = accuracy >= 0.9 ? 3 : accuracy >= 0.7 ? 2 : 1;
-    // XP: 12 por acierto + bonus por perfección + bonus por racha máxima
     xp = session.correct * 12 + (accuracy === 1 ? 25 : 0) + (session.maxStreak >= 4 ? 15 : 0);
-    // Monedas: 3 por acierto + bonus por 3 estrellas
     coins = session.correct * 3 + (stars === 3 ? 10 : 0);
 
     const prev = state.completed[lessonId] || 0;
     state.completed[lessonId] = Math.max(prev, stars);
     state.streak = (state.streak || 0) + 1;
+    state.today.lessons++;
+    if(accuracy === 1) state.today.perfect++;
   } else {
-    // Incluso al fallar se gana algo de XP y monedas para no desmotivar
     xp = session.correct * 6;
     coins = session.correct * 1;
     state.streak = 0;
@@ -1115,9 +1777,15 @@ function finishLesson(failed){
 
   state.xp += xp;
   state.coins += coins;
-  save();
+  state.today.xp += xp;
+  state.today.coins += coins;
 
-  // Resultado
+  if(session.maxStreak >= 5) unlock('streak_5');
+  if(session.maxStreak >= 10) unlock('streak_10');
+
+  save();
+  checkAchievements();
+
   $('resEmoji').textContent = failed ? '😵' : (accuracy === 1 ? '🏆' : '🎉');
   $('resTitle').textContent = failed ? '¡Te quedaste sin vidas!' : '¡Lección completada!';
   $('resSub').textContent = failed
@@ -1139,13 +1807,7 @@ function finishLesson(failed){
   $('resultTip').textContent = randomTip();
 
   showScreen('result');
-
-  if(failed){
-    sfx.fail();
-  } else {
-    sfx.win();
-    confetti();
-  }
+  if(failed) sfx.fail(); else { sfx.win(); confetti(); }
   renderHome();
 }
 
@@ -1165,9 +1827,345 @@ function confetti(){
 }
 
 /* =========================================================
+   TIENDA
+   ========================================================= */
+function openShop(){
+  sfx.tap();
+  showScreen('shop');
+  renderShop();
+}
+function renderShop(){
+  $('shopCoins').textContent = state.coins;
+
+  // Temas
+  const themes = $('shopThemes'); themes.innerHTML = '';
+  SHOP_THEMES.forEach(t => {
+    const owned = state.shop.themes.includes(t.id);
+    const active = state.shop.activeTheme === t.id;
+    const card = document.createElement('div');
+    card.className = 'shop-item' + (owned ? ' owned' : '');
+    card.innerHTML =
+      '<span class="si-icon">' + t.icon + '</span>' +
+      '<div class="si-name">' + t.name + '</div>' +
+      '<div class="si-desc">' + t.desc + '</div>';
+    if(owned){
+      const btn = document.createElement('button');
+      btn.className = 'si-price' + (active ? ' si-active' : '');
+      btn.textContent = active ? '✓ Activo' : 'Usar';
+      if(!active) btn.onclick = () => { state.shop.activeTheme = t.id; applyTheme(); save(); renderShop(); };
+      card.appendChild(btn);
+    } else {
+      const btn = document.createElement('button');
+      btn.className = 'si-price' + (state.coins < t.price ? ' dis' : '');
+      btn.innerHTML = '🪙 ' + t.price;
+      btn.onclick = () => buyTheme(t.id, t.price);
+      card.appendChild(btn);
+    }
+    themes.appendChild(card);
+  });
+
+  // Avatares
+  const avs = $('shopAvatars'); avs.innerHTML = '';
+  SHOP_AVATARS.forEach(a => {
+    const owned = state.shop.avatars.includes(a.id);
+    const active = state.shop.activeAvatar === a.id;
+    const card = document.createElement('div');
+    card.className = 'shop-item' + (owned ? ' owned' : '');
+    card.innerHTML =
+      '<span class="si-icon">' + a.emoji + '</span>' +
+      '<div class="si-name">' + a.name + '</div>' +
+      '<div class="si-desc">Avatar</div>';
+    if(owned){
+      const btn = document.createElement('button');
+      btn.className = 'si-price' + (active ? ' si-active' : '');
+      btn.textContent = active ? '✓ Activo' : 'Usar';
+      if(!active) btn.onclick = () => { state.shop.activeAvatar = a.id; save(); renderShop(); toast('Avatar actualizado'); };
+      card.appendChild(btn);
+    } else {
+      const btn = document.createElement('button');
+      btn.className = 'si-price' + (state.coins < a.price ? ' dis' : '');
+      btn.innerHTML = '🪙 ' + a.price;
+      btn.onclick = () => buyAvatar(a.id, a.price);
+      card.appendChild(btn);
+    }
+    avs.appendChild(card);
+  });
+
+  // Power-ups
+  const pus = $('shopPowerups'); pus.innerHTML = '';
+  SHOP_POWERUPS.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'shop-item';
+    const owned = state.inventory[p.id] || 0;
+    card.innerHTML =
+      '<span class="si-icon">' + p.icon + '</span>' +
+      '<div class="si-name">' + p.name + '</div>' +
+      '<div class="si-desc">' + p.desc + ' · Tienes ' + owned + '</div>';
+    const btn = document.createElement('button');
+    btn.className = 'si-price' + (state.coins < p.price ? ' dis' : '');
+    btn.innerHTML = '🪙 ' + p.price;
+    btn.onclick = () => buyPowerup(p.id, p.price);
+    card.appendChild(btn);
+    pus.appendChild(card);
+  });
+}
+function buyTheme(id, price){
+  if(state.coins < price){ toast('No tienes suficientes monedas'); return; }
+  state.coins -= price;
+  state.shop.themes.push(id);
+  state.shop.activeTheme = id;
+  applyTheme();
+  save(); renderShop(); checkAchievements();
+  sfx.coin(); confetti();
+  toast('🎉 Tema desbloqueado');
+}
+function buyAvatar(id, price){
+  if(state.coins < price){ toast('No tienes suficientes monedas'); return; }
+  state.coins -= price;
+  state.shop.avatars.push(id);
+  state.shop.activeAvatar = id;
+  save(); renderShop(); checkAchievements();
+  sfx.coin(); confetti();
+  toast('🎉 Avatar desbloqueado');
+}
+function buyPowerup(id, price){
+  if(state.coins < price){ toast('No tienes suficientes monedas'); return; }
+  state.coins -= price;
+  state.inventory[id] = (state.inventory[id] || 0) + 1;
+  save(); renderShop(); checkAchievements();
+  sfx.coin();
+  toast('✓ ' + SHOP_POWERUPS.find(p=>p.id===id).name + ' añadido');
+}
+
+/* =========================================================
+   LOGROS
+   ========================================================= */
+function openAchievements(){
+  sfx.tap();
+  showScreen('achievements');
+  renderAchievements();
+}
+function renderAchievements(){
+  const list = $('achList'); list.innerHTML = '';
+  let done = 0;
+  ACHIEVEMENTS.forEach(a => {
+    const unlocked = !!state.achievements[a.id];
+    if(unlocked) done++;
+    const el = document.createElement('div');
+    el.className = 'ach-item' + (unlocked ? ' unlocked' : '');
+    el.innerHTML =
+      '<div class="ach-icon">' + (unlocked ? a.icon : '🔒') + '</div>' +
+      '<div class="ach-info">' +
+        '<div class="ach-name">' + a.name + '</div>' +
+        '<div class="ach-desc">' + a.desc + '</div>' +
+      '</div>' +
+      '<div class="ach-check">' + (unlocked ? '✓' : '') + '</div>';
+    list.appendChild(el);
+  });
+  $('achProgress').textContent = done + ' de ' + ACHIEVEMENTS.length + ' desbloqueados';
+}
+
+/* =========================================================
+   MISIONES
+   ========================================================= */
+function openMissions(){
+  sfx.tap();
+  showScreen('missions');
+  renderMissions();
+}
+function renderMissions(){
+  const list = $('missionList'); list.innerHTML = '';
+  state.daily.missions.forEach(id => {
+    const m = MISSION_POOL.find(x => x.id === id);
+    if(!m) return;
+    const { cur, target, done } = missionProgress(id);
+    const claimed = !!state.daily.claimed[id];
+    const el = document.createElement('div');
+    el.className = 'mission-item' + (claimed ? ' done' : '');
+    el.innerHTML =
+      '<div class="mission-icon">' + m.icon + '</div>' +
+      '<div class="mission-body">' +
+        '<div class="mission-name">' + m.name + '</div>' +
+        '<div class="mission-prog">' + Math.min(cur, target) + ' / ' + target + (claimed ? ' · ¡Reclamado!' : '') + '</div>' +
+        '<div class="mission-bar"><span style="width:' + Math.min(100, cur/target*100) + '%"></span></div>' +
+      '</div>' +
+      '<div class="mission-reward">' + (m.reward.xp ? '+' + m.reward.xp + 'XP ' : '') + (m.reward.coins ? '+' + m.reward.coins + '🪙' : '') + '</div>';
+
+    if(done && !claimed){
+      const btn = document.createElement('button');
+      btn.className = 'btn';
+      btn.style.fontSize = '12px';
+      btn.style.padding = '9px 14px';
+      btn.style.marginTop = '8px';
+      btn.textContent = 'Reclamar';
+      btn.onclick = () => claimMission(id, m);
+      el.querySelector('.mission-body').appendChild(btn);
+    }
+    list.appendChild(el);
+  });
+}
+function claimMission(id, m){
+  if(state.daily.claimed[id]) return;
+  state.daily.claimed[id] = true;
+  state.xp += m.reward.xp || 0;
+  state.coins += m.reward.coins || 0;
+  save();
+  checkAchievements();
+  sfx.coin(); confetti();
+  toast('🎁 Recompensa reclamada');
+  renderMissions();
+  renderHome();
+}
+
+/* =========================================================
+   MODO JUEZ BJCP
+   ========================================================= */
+let judgeSession = null;
+
+function openJudge(){
+  sfx.tap();
+  showScreen('judge');
+  renderJudgeList();
+}
+function renderJudgeList(){
+  const done = Object.keys(state.judge.completed).length;
+  $('judgeSub').textContent = done + ' de ' + JUDGE_CASES.length + ' casos completados';
+  const list = $('judgeCases'); list.innerHTML = '';
+  JUDGE_CASES.forEach(c => {
+    const isDone = state.judge.completed[c.id];
+    const el = document.createElement('div');
+    el.className = 'judge-case' + (isDone ? ' done' : '');
+    el.innerHTML =
+      '<div class="judge-case-head">' +
+        '<div class="judge-case-icon">' + c.icon + '</div>' +
+        '<div>' +
+          '<div class="judge-case-title">' + c.title + '</div>' +
+          '<div class="judge-case-sub">Puntúa esta cerveza como un juez</div>' +
+        '</div>' +
+        '<div class="judge-tag' + (isDone ? ' done' : '') + '">' + (isDone ? '✓ Hecho' : 'Pendiente') + '</div>' +
+      '</div>' +
+      '<div class="judge-case-snippet">' + c.snippet + '</div>';
+    el.onclick = () => startJudgeCase(c);
+    list.appendChild(el);
+  });
+}
+function backToJudgeList(){
+  sfx.tap();
+  judgeSession = null;
+  showScreen('judge');
+  renderJudgeList();
+}
+function startJudgeCase(c){
+  judgeSession = { caseData:c, answered:false };
+  showScreen('judge-play');
+  renderJudgeCase();
+}
+function renderJudgeCase(){
+  const c = judgeSession.caseData;
+  const area = $('judgePlayArea');
+  area.innerHTML = '';
+  $('judgeCaseInfo').textContent = c.title.split('·')[0].trim();
+  $('judgeBar').style.width = judgeSession.answered ? '100%' : '0%';
+
+  const sheet = document.createElement('div');
+  sheet.className = 'judge-sheet';
+  sheet.innerHTML =
+    '<div style="font-weight:900;font-size:15px;margin-bottom:8px">📋 Hoja de cata</div>' +
+    '<div class="judge-row"><b>Aroma</b><span>Perfil descrito en la ficha</span></div>' +
+    '<div class="judge-row"><b>Apariencia</b><span>Color y espuma según descripción</span></div>' +
+    '<div class="judge-row"><b>Sabor</b><span>Balance y defectos mencionados</span></div>' +
+    '<div class="judge-row"><b>Sensación</b><span>Cuerpo y carbonatación</span></div>' +
+    '<div class="judge-row"><b>General</b><span>Impresión global del estilo</span></div>';
+  area.appendChild(sheet);
+
+  const p = document.createElement('p');
+  p.className = 'prompt';
+  p.textContent = '¿Qué puntuación le darías del 0 al 50?';
+  area.appendChild(p);
+
+  const bands = document.createElement('div');
+  bands.className = 'judge-score-bands';
+  c.bands.forEach(b => {
+    const btn = document.createElement('button');
+    btn.className = 'score-band';
+    btn.innerHTML =
+      '<span class="band-range">' + b.range + '</span>' +
+      '<span><b>' + b.label + '</b> — ' + b.text + '</span>';
+    btn.onclick = () => answerJudge(b.range, btn);
+    bands.appendChild(btn);
+  });
+  area.appendChild(bands);
+}
+function answerJudge(range, btn){
+  if(judgeSession.answered) return;
+  judgeSession.answered = true;
+  const c = judgeSession.caseData;
+  const isCorrect = range === c.correct;
+
+  document.querySelectorAll('.score-band').forEach(b => {
+    b.classList.add('dis');
+    const r = b.querySelector('.band-range').textContent;
+    if(r === c.correct) b.classList.add('correct');
+    else if(r === range && !isCorrect) b.classList.add('wrong');
+  });
+  $('judgeBar').style.width = '100%';
+
+  const fb = $('feedback');
+  fb.classList.remove('ok','bad');
+
+  if(isCorrect){
+    fb.classList.add('ok');
+    $('fbIcon').textContent = '✓';
+    $('fbTitle').textContent = '¡Puntuación correcta!';
+    state.judge.perfectStreak = (state.judge.perfectStreak || 0) + 1;
+    state.today.judge++;
+    // Recompensa
+    state.xp += 40;
+    state.coins += 20;
+    sfx.correct();
+  } else {
+    fb.classList.add('bad');
+    $('fbIcon').textContent = '✕';
+    $('fbTitle').textContent = 'Puntuación desviada · Correcto: ' + c.correct;
+    state.judge.perfectStreak = 0;
+    state.today.judge++;
+    state.xp += 10;
+    state.coins += 5;
+    sfx.wrong();
+  }
+
+  if(!state.judge.completed[c.id]){
+    state.judge.completed[c.id] = true;
+  }
+  $('fbText').textContent = c.exp;
+  save();
+  checkAchievements();
+  renderHome();
+
+  $('btnContinue').textContent = 'VOLVER AL LISTADO';
+  fb.classList.add('show');
+}
+
+/* =========================================================
+   NAVEGACIÓN
+   ========================================================= */
+function goHome(){
+  sfx.tap();
+  showScreen('home');
+  renderHome();
+}
+
+/* =========================================================
    EVENTOS
    ========================================================= */
-$('btnContinue').addEventListener('click', nextStep);
+$('btnContinue').addEventListener('click', () => {
+  $('feedback').classList.remove('show');
+  if(judgeSession){
+    backToJudgeList();
+    return;
+  }
+  nextStep();
+});
 
 $('btnClose').addEventListener('click', () => {
   sfx.tap();
@@ -1184,7 +2182,6 @@ $('btnResCont').addEventListener('click', () => {
   renderHome();
 });
 
-// Atajos de teclado 1-4 y Enter
 document.addEventListener('keydown', e => {
   if($('screen-lesson').classList.contains('active')){
     if(e.key >= '1' && e.key <= '4'){
@@ -1192,12 +2189,8 @@ document.addEventListener('keydown', e => {
       const i = parseInt(e.key) - 1;
       if(btns[i] && !session.answered) btns[i].click();
     }
-    if(e.key === 'Enter' && $('feedback').classList.contains('show')){
-      nextStep();
-    }
-    if(e.key === 'Escape'){
-      $('btnClose').click();
-    }
+    if(e.key === 'Enter' && $('feedback').classList.contains('show')) nextStep();
+    if(e.key === 'Escape') $('btnClose').click();
   }
 });
 
@@ -1207,7 +2200,6 @@ document.addEventListener('keydown', e => {
 load();
 renderHome();
 
-// Desbloquear audio en el primer toque
 document.addEventListener('pointerdown', function unlock(){
   ac();
   document.removeEventListener('pointerdown', unlock);
